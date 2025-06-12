@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EduMalawi - Unified Platform</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* Custom CSS for features Tailwind doesn't cover easily */
+        .gradient-bg {
+            background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
+        }
+        .sidebar {
+            transition: all 0.3s ease;
+        }
+        .assignment-card:hover, .portal-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+        }
+        .progress-ring__circle {
+            transition: stroke-dashoffset 0.35s;
+            transform: rotate(-90deg);
+            transform-origin: 50% 50%;
+        }
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+        .pulse {
+            animation: pulse 1.5s infinite;
+        }
+        /* Modals are hidden by default */
+        .modal {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 50;
+            overflow-y: auto;
+        }
+    </style>
+</head>
+<body class="bg-gray-50 font-sans">
+    <nav class="gradient-bg text-white shadow-lg">
+        <div class="container mx-auto px-4 py-3 flex justify-between items-center">
+            <div class="flex items-center space-x-2">
+                <i class="fas fa-book-open text-2xl"></i>
+                <span class="text-xl font-bold">EduMalawi</span>
+            </div>
+            <div class="hidden md:flex items-center space-x-4">
+                <a href="#about" class="hover:text-gray-200">About</a>
+                <a href="#features" class="hover:text-gray-200">Features</a>
+                <a href="#contact" class="hover:text-gray-200">Contact</a>
+                <button id="login-button" class="bg-white text-indigo-600 px-4 py-2 rounded-full hover:bg-gray-100 transition duration-300">Login</button>
+            </div>
+
+            <div class="relative ml-4">
+                <button id="notification-bell" class="relative p-2 rounded-full hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                    <i class="fas fa-bell text-white text-xl"></i>
+                    <span id="notification-badge" class="absolute top-0 right-0 inline-flex items-center justify-center px-2 py-1 text-xs font-bold leading-none text-red-100 transform translate-x-1/2 -translate-y-1/2 bg-red-600 rounded-full hidden">0</span>
+                </button>
+
+                <div id="notifications-dropdown" class="absolute right-0 mt-2 w-80 bg-white border border-gray-200 rounded-lg shadow-lg z-50 hidden">
+                    <div class="p-4">
+                        <h3 class="font-semibold text-gray-800 border-b pb-2 mb-2">Notifications</h3>
+                        <ul id="notification-list" class="divide-y divide-gray-200">
+                            <li class="py-2 text-gray-700 text-sm">No new notifications.</li>
+                        </ul>
+                        <div class="text-right mt-2">
+                            <button id="mark-all-read" class="text-indigo-600 hover:text-indigo-800 text-xs font-medium">Mark all as read</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="md:hidden">
+                <button id="mobile-menu-button" class="text-white text-2xl focus:outline-none">
+                    <i class="fas fa-bars"></i>
+                </button>
+            </div>
+        </div>
+        <div id="mobile-menu" class="hidden md:hidden bg-indigo-700">
+            <a href="#about" class="block px-4 py-2 text-sm text-white hover:bg-indigo-800">About</a>
+            <a href="#features" class="block px-4 py-2 text-sm text-white hover:bg-indigo-800">Features</a>
+            <a href="#contact" class="block px-4 py-2 text-sm text-white hover:bg-indigo-800">Contact</a>
+            <button class="block w-full text-left px-4 py-2 text-sm text-white hover:bg-indigo-800" id="mobile-login-button">Login</button>
+        </div>
+    </nav>
+
+    <main class="container mx-auto px-4 py-8">
+        <section class="text-center mb-12">
+            <h1 class="text-4xl md:text-5xl font-bold text-gray-800 mb-4">Empowering Education in Malawi</h1>
+            <p class="text-lg text-gray-600 mb-8">A unified platform for students, teachers, parents, and administrators.</p>
+            <div class="space-x-4">
+                <a href="#" class="bg-indigo-600 text-white px-6 py-3 rounded-full text-lg hover:bg-indigo-700 transition duration-300">Get Started</a>
+                <a href="#features" class="text-indigo-600 border border-indigo-600 px-6 py-3 rounded-full text-lg hover:bg-indigo-50 transition duration-300">Learn More</a>
+            </div>
+        </section>
+
+        <div id="login-modal" class="modal hidden">
+            <div class="bg-white p-8 rounded-lg shadow-xl w-full max-w-md">
+                <h2 class="text-2xl font-bold mb-6 text-gray-800 text-center">Login to EduMalawi</h2>
+                <form id="login-form">
+                    <div class="mb-4">
+                        <label for="username" class="block text-gray-700 text-sm font-bold mb-2">Username:</label>
+                        <input type="text" id="username" name="username" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" placeholder="Enter your username">
+                    </div>
+                    <div class="mb-6">
+                        <label for="password" class="block text-gray-700 text-sm font-bold mb-2">Password:</label>
+                        <input type="password" id="password" name="password" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline" placeholder="********">
+                    </div>
+                    <div class="mb-4">
+                        <label for="role" class="block text-gray-700 text-sm font-bold mb-2">Login As:</label>
+                        <select id="role" name="role" class="block appearance-none w-full bg-white border border-gray-400 hover:border-gray-500 px-4 py-2 pr-8 rounded shadow leading-tight focus:outline-none focus:shadow-outline">
+                            <option value="student">Student</option>
+                            <option value="teacher">Teacher</option>
+                            <option value="parent">Parent</option>
+                            <option value="headmaster">Headmaster</option>
+                            <option value="admin">Admin</option>
+                        </select>
+                        <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
+                            <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"/></svg>
+                        </div>
+                    </div>
+                    <div class="flex items-center justify-between">
+                        <button type="submit" class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline transition duration-300">Sign In</button>
+                        <button type="button" id="close-login-modal" class="text-gray-500 hover:text-gray-700 text-sm">Cancel</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <div id="student-dashboard-section" class="hidden"></div>
+        <div id="teacher-dashboard-section" class="hidden"></div>
+        <div id="parent-dashboard-section" class="hidden"></div>
+        <div id="headmaster-dashboard-section" class="hidden"></div>
+        <div id="admin-dashboard-section" class="hidden"></div>
+
+        <section id="about" class="mb-12 py-12 bg-white rounded-lg shadow-md">
+            <h2 class="text-3xl font-bold text-gray-800 text-center mb-8">About EduMalawi</h2>
+            <div class="max-w-3xl mx-auto text-gray-600 text-lg">
+                <p class="mb-4">EduMalawi is a comprehensive educational platform designed to streamline communication, enhance learning, and simplify administration within schools across Malawi. Our mission is to empower students, support teachers, engage parents, and provide headmasters and administrators with the tools they need to foster a thriving educational environment.</p>
+                <p>From assignment tracking and grade management to school-wide announcements and financial reporting, EduMalawi brings all essential school functions into a single, easy-to-use system.</p>
+            </div>
+        </section>
+
+        <section id="features" class="mb-12 py-12 bg-gray-100 rounded-lg shadow-md">
+            <h2 class="text-3xl font-bold text-gray-800 text-center mb-8">Key Features</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-5xl mx-auto">
+                <div class="bg-white p-6 rounded-lg shadow-md text-center">
+                    <i class="fas fa-user-graduate text-4xl text-indigo-600 mb-4"></i>
+                    <h3 class="text-xl font-semibold text-gray-800 mb-2">Student Portal</h3>
+                    <p class="text-gray-600">Access assignments, grades, learning resources, and communicate with teachers.</p>
+                </div>
+                <div class="bg-white p-6 rounded-lg shadow-md text-center">
+                    <i class="fas fa-chalkboard-teacher text-4xl text-indigo-600 mb-4"></i>
+                    <h3 class="text-xl font-semibold text-gray-800 mb-2">Teacher Dashboard</h3>
+                    <p class="text-gray-600">Manage classes, post assignments, enter grades, and track student progress.</p>
+                </div>
+                <div class="bg-white p-6 rounded-lg shadow-md text-center">
+                    <i class="fas fa-users text-4xl text-indigo-600 mb-4"></i>
+                    <h3 class="text-xl font-semibold text-gray-800 mb-2">Parent Portal</h3>
+                    <p class="text-gray-600">Monitor child's academic performance, view announcements, and connect with school staff.</p>
+                </div>
+                <div class="bg-white p-6 rounded-lg shadow-md text-center">
+                    <i class="fas fa-user-tie text-4xl text-indigo-600 mb-4"></i>
+                    <h3 class="text-xl font-semibold text-gray-800 mb-2">Headmaster Overview</h3>
+                    <p class="text-gray-600">Gain insights into school performance, manage staff, and oversee curriculum.</p>
+                </div>
+                <div class="bg-white p-6 rounded-lg shadow-md text-center">
+                    <i class="fas fa-cogs text-4xl text-indigo-600 mb-4"></i>
+                    <h3 class="text-xl font-semibold text-gray-800 mb-2">Admin Controls</h3>
+                    <p class="text-gray-600">Full system management, user accounts, course configuration, and system health checks.</p>
+                </div>
+                <div class="bg-white p-6 rounded-lg shadow-md text-center">
+                    <i class="fas fa-comments text-4xl text-indigo-600 mb-4"></i>
+                    <h3 class="text-xl font-semibold text-gray-800 mb-2">Seamless Communication</h3>
+                    <p class="text-gray-600">Integrated messaging and announcement system for all stakeholders.</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="contact" class="py-12 bg-white rounded-lg shadow-md">
+            <h2 class="text-3xl font-bold text-gray-800 text-center mb-8">Contact Us</h2>
+            <div class="max-w-2xl mx-auto px-4">
+                <p class="text-lg text-gray-600 text-center mb-6">Have questions or want to learn more about EduMalawi? Reach out to us!</p>
+                <form class="space-y-4">
+                    <div>
+                        <label for="name" class="block text-gray-700 text-sm font-bold mb-2">Name:</label>
+                        <input type="text" id="name" name="name" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" placeholder="Your Name">
+                    </div>
+                    <div>
+                        <label for="email" class="block text-gray-700 text-sm font-bold mb-2">Email:</label>
+                        <input type="email" id="email" name="email" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" placeholder="Your Email">
+                    </div>
+                    <div>
+                        <label for="message" class="block text-gray-700 text-sm font-bold mb-2">Message:</label>
+                        <textarea id="message" name="message" rows="5" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" placeholder="Your Message"></textarea>
+                    </div>
+                    <div class="text-center">
+                        <button type="submit" class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-6 rounded-full focus:outline-none focus:shadow-outline transition duration-300">Send Message</button>
+                    </div>
+                </form>
+            </div>
+        </section>
+    </main>
+
+    <footer class="gradient-bg text-white py-6 mt-12">
+        <div class="container mx-auto px-4 text-center">
+            <p>&copy; 2023 EduMalawi. All rights reserved.</p>
+            <div class="flex justify-center space-x-4 mt-2">
+                <a href="#" class="hover:text-gray-200"><i class="fab fa-facebook-f"></i></a>
+                <a href="#" class="hover:text-gray-200"><i class="fab fa-twitter"></i></a>
+                <a href="#" class="hover:text-gray-200"><i class="fab fa-linkedin-in"></i></a>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Mobile menu toggle
+            document.getElementById('mobile-menu-button').addEventListener('click', function() {
+                const menu = document.getElementById('mobile-menu');
+                menu.classList.toggle('hidden');
+            });
+
+            // Login modal functionality
+            const loginButton = document.getElementById('login-button');
+            const mobileLoginButton = document.getElementById('mobile-login-button');
+            const loginModal = document.getElementById('login-modal');
+            const closeLoginModalButton = document.getElementById('close-login-modal');
+            const loginForm = document.getElementById('login-form');
+            const roleSelect = document.getElementById('role');
+
+            function showLoginModal() {
+                loginModal.classList.remove('hidden');
+            }
+
+            function hideLoginModal() {
+                loginModal.classList.add('hidden');
+            }
+
+            loginButton.addEventListener('click', showLoginModal);
+            mobileLoginButton.addEventListener('click', showLoginModal);
+            closeLoginModalButton.addEventListener('click', hideLoginModal);
+
+            loginForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                const username = document.getElementById('username').value;
+                const password = document.getElementById('password').value;
+                const role = roleSelect.value;
+
+                // In a real application, you would send this to a backend for authentication.
+                // For this front-end demo, we'll simulate a redirect based on role.
+                console.log(`Attempting login as ${role} with username: ${username}, password: ${password}`);
+
+                // Simulate successful login and redirect
+                alert(`Logged in as ${role}! Redirecting to your dashboard.`); // Placeholder alert
+                hideLoginModal(); // Hide the modal after "login"
+
+                // In a real application, you'd navigate:
+                // window.location.href = `/${role}-dashboard.html`;
+
+                // For this unified platform, we'll hide/show sections
+                document.getElementById('student-dashboard-section').classList.add('hidden');
+                document.getElementById('teacher-dashboard-section').classList.add('hidden');
+                document.getElementById('parent-dashboard-section').classList.add('hidden');
+                document.getElementById('headmaster-dashboard-section').classList.add('hidden');
+                document.getElementById('admin-dashboard-section').classList.add('hidden');
+
+                // This part would typically fetch the content of the respective dashboard
+                // and inject it, or simply redirect to the actual dashboard page.
+                // For a truly unified experience, you'd load content dynamically here.
+                // Example (simplified):
+                switch(role) {
+                    case 'student':
+                        // alert('Loading student dashboard content...');
+                        // document.getElementById('student-dashboard-section').classList.remove('hidden');
+                        window.location.href = 'student-dashboard.html'; // Redirect to actual dashboard file
+                        break;
+                    case 'teacher':
+                        // alert('Loading teacher dashboard content...');
+                        // document.getElementById('teacher-dashboard-section').classList.remove('hidden');
+                        window.location.href = 'teacher-dashboard.html';
+                        break;
+                    case 'parent':
+                        // alert('Loading parent dashboard content...');
+                        // document.getElementById('parent-dashboard-section').classList.remove('hidden');
+                        window.location.href = 'parent-dashboard.html';
+                        break;
+                    case 'headmaster':
+                        // alert('Loading headmaster dashboard content...');
+                        // document.getElementById('headmaster-dashboard-section').classList.remove('hidden');
+                        window.location.href = 'headmaster-dashboard.html';
+                        break;
+                    case 'admin':
+                        // alert('Loading admin dashboard content...');
+                        // document.getElementById('admin-dashboard-section').classList.remove('hidden');
+                        window.location.href = 'admin-dashboard.html';
+                        break;
+                }
+            });
+
+            // Close modals when clicking outside
+            window.addEventListener('click', function(event) {
+                if (event.target === loginModal) {
+                    hideLoginModal();
+                }
+                // Existing timer modal closing logic (if any)
+                // if (event.target === assignmentModal) {
+                //     assignmentModal.classList.add('hidden');
+                //     clearInterval(timerInterval);
+                // }
+                // if (event.target === paymentModal) {
+                //     paymentModal.classList.add('hidden');
+                // }
+            });
+
+            // --- Real-time Notifications Logic START ---
+            const notificationBell = document.getElementById('notification-bell');
+            const notificationBadge = document.getElementById('notification-badge');
+            const notificationsDropdown = document.getElementById('notifications-dropdown');
+            const notificationList = document.getElementById('notification-list');
+            const markAllReadBtn = document.getElementById('mark-all-read');
+
+            let notifications = [
+                { id: 1, message: 'New assignment posted: Mathematics - Algebra II', read: false, time: '2 hours ago' },
+                { id: 2, message: 'Your grade for English Literature is A-', read: false, time: 'yesterday' },
+                { id: 3, message: 'School wide announcement: Parent-Teacher Conference on June 20th.', read: true, time: '2 days ago' }
+            ];
+
+            function updateNotificationsUI() {
+                notificationList.innerHTML = ''; // Clear existing list
+                let unreadCount = 0;
+
+                if (notifications.length === 0) {
+                    notificationList.innerHTML = '<li class="py-2 text-gray-700 text-sm">No new notifications.</li>';
+                } else {
+                    notifications.forEach(notif => {
+                        const li = document.createElement('li');
+                        li.classList.add('py-2', 'text-gray-700', 'text-sm', 'flex', 'justify-between', 'items-center');
+                        if (!notif.read) {
+                            li.classList.add('font-semibold', 'text-gray-900');
+                            unreadCount++;
+                        }
+
+                        li.innerHTML = `
+                            <div>${notif.message} <span class="text-gray-500 text-xs ml-1">${notif.time}</span></div>
+                            <button data-id="${notif.id}" class="mark-as-read text-indigo-500 hover:text-indigo-700 text-xs">${notif.read ? '<i class="fas fa-check-circle"></i>' : '<i class="fas fa-circle"></i>'}</button>
+                        `;
+                        notificationList.appendChild(li);
+                    });
+                }
+
+                if (unreadCount > 0) {
+                    notificationBadge.textContent = unreadCount;
+                    notificationBadge.classList.remove('hidden');
+                } else {
+                    notificationBadge.classList.add('hidden');
+                }
+            }
+
+            // Initial UI update
+            updateNotificationsUI();
+
+            // Toggle dropdown
+            notificationBell.addEventListener('click', function(event) {
+                event.stopPropagation(); // Prevent document click from closing immediately
+                notificationsDropdown.classList.toggle('hidden');
+                // Mark all currently displayed as read when opened
+                notifications.forEach(notif => notif.read = true);
+                updateNotificationsUI();
+            });
+
+            // Mark individual notification as read
+            notificationList.addEventListener('click', function(event) {
+                if (event.target.classList.contains('mark-as-read') || event.target.closest('.mark-as-read')) {
+                    const button = event.target.closest('.mark-as-read');
+                    const notifId = parseInt(button.dataset.id);
+                    const notifIndex = notifications.findIndex(n => n.id === notifId);
+                    if (notifIndex !== -1) {
+                        notifications[notifIndex].read = true;
+                        updateNotificationsUI();
+                    }
+                }
+            });
+
+            // Mark all notifications as read button
+            markAllReadBtn.addEventListener('click', function() {
+                notifications.forEach(notif => notif.read = true);
+                updateNotificationsUI();
+                notificationsDropdown.classList.add('hidden'); // Close dropdown after marking all as read
+            });
+
+            // Close dropdown when clicking outside
+            window.addEventListener('click', function(event) {
+                if (!notificationBell.contains(event.target) && !notificationsDropdown.contains(event.target)) {
+                    notificationsDropdown.classList.add('hidden');
+                }
+            });
+
+            // Example of adding a new notification (simulate a real-time event)
+            function addNewNotification(message) {
+                const newId = notifications.length > 0 ? Math.max(...notifications.map(n => n.id)) + 1 : 1;
+                notifications.unshift({ id: newId, message: message, read: false, time: 'just now' });
+                updateNotificationsUI();
+                if (notificationsDropdown.classList.contains('hidden')) {
+                    notificationBadge.classList.remove('hidden');
+                    notificationBadge.textContent = parseInt(notificationBadge.textContent) + 1;
+                }
+            }
+
+            // Simulate new notification after 10 seconds for testing
+            setTimeout(() => {
+                addNewNotification('New message from Headmaster: Important update regarding school holidays.');
+            }, 10000);
+            // --- Real-time Notifications Logic END ---
+        });
+    </script>
+</body>
+</html>
