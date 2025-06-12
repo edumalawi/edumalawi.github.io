@@ -135,6 +135,7 @@
                             <option value="student">Student</option>
                             <option value="parent">Parent</option>
                             <option value="staff">Staff</option>
+                            <option value="admin">Admin</option> <!-- Admin option is here -->
                         </select>
                     </div>
                     <button type="submit"
@@ -354,8 +355,8 @@
                 authTitle.textContent = 'Login';
                 messageBox.classList.add('hidden'); // Clear messages on tab switch
 
-                // When switching to login form, ensure staff logic is applied if staff is already selected
-                if (loginRoleSelect.value === 'staff') {
+                // When switching to login form, ensure staff/admin logic is applied if staff or admin is already selected
+                if (loginRoleSelect.value === 'staff' || loginRoleSelect.value === 'admin') {
                     signupTab.classList.add('hidden');
                     tabNavigation.classList.add('justify-center');
                     loginTab.classList.remove('flex-1');
@@ -441,7 +442,7 @@
                 const email = document.getElementById('signup-email').value;
                 const phoneNumber = signupPhoneInput.value;
                 const password = document.getElementById('signup-password').value;
-                const confirmPassword = document.getElementById('signup-confirm-password').value;
+                const confirmPassword = document.getElementById('signup-confirm-password').값;
                 const role = signupRoleSelect.value;
 
                 if (!username || !email || !phoneNumber || !password || !confirmPassword) {
@@ -482,9 +483,9 @@
                 }
             });
 
-            // Logic: When 'Staff' is selected, hide the 'Sign Up' tab and form
+            // Logic: When 'Staff' or 'Admin' is selected, hide the 'Sign Up' tab and form
             loginRoleSelect.addEventListener('change', function() {
-                if (loginRoleSelect.value === 'staff') {
+                if (loginRoleSelect.value === 'staff' || loginRoleSelect.value === 'admin') {
                     signupTab.classList.add('hidden'); // Hide the sign up tab
                     signupForm.classList.add('hidden'); // Ensure sign up form is hidden
                     showLoginForm(); // Always switch to login form
