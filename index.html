@@ -293,6 +293,10 @@
                 menu.classList.toggle('hidden');
             });
 
+            // Base URL for your backend server
+            // If you deploy your backend, replace 'http://localhost:3000' with your server's actual URL
+            const BACKEND_URL = 'http://localhost:3000'; // IMPORTANT: Change this to your deployed backend URL when live!
+
             // Login modal functionality (new merged code)
             const authModal = document.getElementById('auth-modal');
             const closeModalBtn = document.getElementById('close-modal-btn');
@@ -306,7 +310,7 @@
 
             const loginRoleSelect = document.getElementById('login-role');
             const signupRoleSelect = document.getElementById('signup-role');
-            const signupPhoneInput = document.getElementById('signup-phone'); // Get the new phone input
+            const signupPhoneInput = document.getElementById('signup-phone');
 
             // Event listeners for the main page's login buttons to show the new modal
             const loginButton = document.getElementById('login-button');
@@ -392,35 +396,53 @@
                 }
             });
 
-            // Handle Login Form Submission
-            loginForm.addEventListener('submit', function(e) {
+            // Handle Login Form Submission - NOW SENDS TO BACKEND
+            loginForm.addEventListener('submit', async function(e) {
                 e.preventDefault();
                 const email = document.getElementById('login-email').value;
                 const password = document.getElementById('login-password').value;
-                const role = loginRoleSelect.value; // Get selected role
+                const role = loginRoleSelect.value;
 
                 if (!email || !password) {
                     showMessage('Please fill in all fields.', 'error');
                     return;
                 }
 
-                // In a real application, you would send this data to your backend for authentication.
-                // For this demo, we'll just simulate success/failure.
-                console.log('Login attempt:', { email, password, role });
-                showMessage(`Login successful as ${role}! Welcome back.`, 'success');
-                // You would typically redirect or update UI here after successful login.
-                // authModal.classList.add('hidden');
+                try {
+                    const response = await fetch(`${BACKEND_URL}/api/login`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({ email, password, role })
+                    });
+
+                    const data = await response.json();
+                    if (response.ok) {
+                        showMessage(data.message, 'success');
+                        // In a real application, you'd store a token (JWT) and redirect
+                        // For this demo, we'll just hide the modal after success
+                        authModal.classList.add('hidden');
+                        // Example redirection based on role (you'd have separate dashboards)
+                        // setTimeout(() => { window.location.href = `/${role}-dashboard.html`; }, 500);
+                    } else {
+                        showMessage(data.message || 'Login failed. Please try again.', 'error');
+                    }
+                } catch (error) {
+                    console.error('Error during login:', error);
+                    showMessage('An error occurred during login. Please try again later.', 'error');
+                }
             });
 
-            // Handle Sign Up Form Submission
-            signupForm.addEventListener('submit', function(e) {
+            // Handle Sign Up Form Submission - NOW SENDS TO BACKEND
+            signupForm.addEventListener('submit', async function(e) {
                 e.preventDefault();
                 const username = document.getElementById('signup-username').value;
                 const email = document.getElementById('signup-email').value;
-                const phoneNumber = signupPhoneInput.value; // Get phone number
+                const phoneNumber = signupPhoneInput.value;
                 const password = document.getElementById('signup-password').value;
                 const confirmPassword = document.getElementById('signup-confirm-password').value;
-                const role = signupRoleSelect.value; // Get selected role
+                const role = signupRoleSelect.value;
 
                 if (!username || !email || !phoneNumber || !password || !confirmPassword) {
                     showMessage('Please fill in all fields.', 'error');
@@ -437,23 +459,27 @@
                     return;
                 }
 
-                // Simulate successful registration
-                console.log('Sign Up attempt:', { username, email, phoneNumber, password, role });
-                showMessage(`Sign up successful as ${role}! You can now log in.`, 'success');
+                try {
+                    const response = await fetch(`${BACKEND_URL}/api/signup`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({ username, email, phoneNumber, password, role })
+                    });
 
-                // NEW: Simulate notification to Headmaster and Admin for Student/Parent sign-ups
-                if (role === 'student' || role === 'parent') {
-                    console.log(`NOTIFICATION: New ${role} account created by "${username}". This would trigger a notification to Headmaster and Admin.`);
-                    // In a real application, an API call would be made here, e.g.:
-                    // fetch('/api/notify-admin-headmaster', {
-                    //     method: 'POST',
-                    //     headers: { 'Content-Type': 'application/json' },
-                    //     body: JSON.stringify({ newUser: { username, role, email, phoneNumber } })
-                    // });
+                    const data = await response.json();
+                    if (response.ok) {
+                        showMessage(data.message, 'success');
+                        // Switch to login tab after successful signup
+                        setTimeout(() => showLoginForm(), 2000);
+                    } else {
+                        showMessage(data.message || 'Sign up failed. Please try again.', 'error');
+                    }
+                } catch (error) {
+                    console.error('Error during sign up:', error);
+                    showMessage('An error occurred during sign up. Please try again later.', 'error');
                 }
-
-                // Optionally switch to login tab after successful signup
-                setTimeout(() => showLoginForm(), 2000);
             });
 
             // Logic: When 'Staff' is selected, hide the 'Sign Up' tab and form
