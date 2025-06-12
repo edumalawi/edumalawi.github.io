@@ -14,7 +14,7 @@
         .sidebar {
             transition: all 0.3s ease;
         }
-        .assignment-card:hover, .portal-card:hover {
+        .assignment-card:hover, .portal-card:hover, .course-card:hover {
             transform: translateY(-5px);
             box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
         }
@@ -32,14 +32,15 @@
         }
         /* Modals are hidden by default */
         .modal {
-            position: fixed;
-            inset: 0;
-            background: rgba(0, 0, 0, 0.5);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            z-index: 50;
-            overflow-y: auto;
+            position: fixed; inset: 0; background: rgba(0, 0, 0, 0.5);
+            display: flex; align-items: center; justify-content: center; z-index: 50; overflow-y: auto;
+        }
+        /* Style for active sidebar link */
+        .sidebar a.active {
+            background-color: #4A5568; /* Darker gray for active state */
+            border-radius: 0.375rem; /* rounded-md */
+            padding: 0.5rem 0.75rem; /* py-2 px-3 */
+            color: white;
         }
     </style>
 </head>
@@ -51,10 +52,12 @@
                 <span class="text-xl font-bold">EduMalawi</span>
             </div>
             <div class="hidden md:flex items-center space-x-4">
-                <a href="#about" class="hover:text-gray-200">About</a>
-                <a href="#features" class="hover:text-gray-200">Features</a>
-                <a href="#contact" class="hover:text-gray-200">Contact</a>
-                <button id="login-button" class="bg-white text-indigo-600 px-4 py-2 rounded-full hover:bg-gray-100 transition duration-300">Login</button>
+                <a href="#" class="hover:text-gray-200" id="nav-dashboard">Dashboard</a>
+                <a href="#" class="hover:text-gray-200" id="nav-courses">Courses</a>
+                <a href="#" class="hover:text-gray-200" id="nav-assignments">Assignments</a>
+                <a href="#" class="hover:text-gray-200" id="nav-grades">Grades</a>
+                <a href="#" class="hover:text-gray-200" id="nav-profile">Profile</a>
+                <button class="bg-red-600 text-white px-4 py-2 rounded-full hover:bg-red-700 transition duration-300">Logout</button>
             </div>
 
             <div class="relative ml-4">
@@ -82,254 +85,74 @@
             </div>
         </div>
         <div id="mobile-menu" class="hidden md:hidden bg-indigo-700">
-            <a href="#about" class="block px-4 py-2 text-sm text-white hover:bg-indigo-800">About</a>
-            <a href="#features" class="block px-4 py-2 text-sm text-white hover:bg-indigo-800">Features</a>
-            <a href="#contact" class="block px-4 py-2 text-sm text-white hover:bg-indigo-800">Contact</a>
-            <button class="block w-full text-left px-4 py-2 text-sm text-white hover:bg-indigo-800" id="mobile-login-button">Login</button>
+            <a href="#" class="block px-4 py-2 text-sm text-white hover:bg-indigo-800">Dashboard</a>
+            <a href="#" class="block px-4 py-2 text-sm text-white hover:bg-indigo-800">Courses</a>
+            <a href="#" class="block px-4 py-2 text-sm text-white hover:bg-indigo-800">Assignments</a>
+            <a href="#" class="block px-4 py-2 text-sm text-white hover:bg-indigo-800">Grades</a>
+            <a href="#" class="block px-4 py-2 text-sm text-white hover:bg-indigo-800">Profile</a>
+            <button class="block w-full text-left px-4 py-2 text-sm text-white hover:bg-indigo-800">Logout</button>
         </div>
     </nav>
 
-    <main class="container mx-auto px-4 py-8">
-        <section class="text-center mb-12">
-            <h1 class="text-4xl md:text-5xl font-bold text-gray-800 mb-4">Empowering Education in Malawi</h1>
-            <p class="text-lg text-gray-600 mb-8">A unified platform for students, teachers, parents, and administrators.</p>
-            <div class="space-x-4">
-                <a href="#" class="bg-indigo-600 text-white px-6 py-3 rounded-full text-lg hover:bg-indigo-700 transition duration-300">Get Started</a>
-                <a href="#features" class="text-indigo-600 border border-indigo-600 px-6 py-3 rounded-full text-lg hover:bg-indigo-50 transition duration-300">Learn More</a>
-            </div>
-        </section>
+    <div class="flex">
+        <aside class="w-64 bg-gray-800 text-white min-h-screen p-6 hidden md:block">
+            <h2 class="text-2xl font-bold mb-6">EduMalawi</h2>
+            <nav id="sidebar-nav">
+                <ul>
+                    <li class="mb-4">
+                        <a href="#" class="flex items-center py-2 px-3 text-gray-300 hover:text-white hover:bg-gray-700 rounded-md transition duration-200 active" data-role="student">
+                            <i class="fas fa-user-graduate mr-3"></i> Student
+                        </a>
+                    </li>
+                    <li class="mb-4">
+                        <a href="#" class="flex items-center py-2 px-3 text-gray-300 hover:text-white hover:bg-gray-700 rounded-md transition duration-200" data-role="teacher">
+                            <i class="fas fa-chalkboard-teacher mr-3"></i> Teacher
+                        </a>
+                    </li>
+                    <li class="mb-4">
+                        <a href="#" class="flex items-center py-2 px-3 text-gray-300 hover:text-white hover:bg-gray-700 rounded-md transition duration-200" data-role="parent">
+                            <i class="fas fa-user-friends mr-3"></i> Parent
+                        </a>
+                    </li>
+                    <li class="mb-4">
+                        <a href="#" class="flex items-center py-2 px-3 text-gray-300 hover:text-white hover:bg-gray-700 rounded-md transition duration-200" data-role="headmaster">
+                            <i class="fas fa-user-tie mr-3"></i> Headmaster
+                        </a>
+                    </li>
+                    <li class="mb-4">
+                        <a href="#" class="flex items-center py-2 px-3 text-gray-300 hover:text-white hover:bg-gray-700 rounded-md transition duration-200" data-role="admin">
+                            <i class="fas fa-user-shield mr-3"></i> Admin
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+        </aside>
 
-        <div id="login-modal" class="modal hidden">
-            <div class="bg-white p-8 rounded-lg shadow-xl w-full max-w-md">
-                <h2 class="text-2xl font-bold mb-6 text-gray-800 text-center">Login to EduMalawi</h2>
-                <form id="login-form">
-                    <div class="mb-4">
-                        <label for="username" class="block text-gray-700 text-sm font-bold mb-2">Username:</label>
-                        <input type="text" id="username" name="username" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" placeholder="Enter your username">
-                    </div>
-                    <div class="mb-6">
-                        <label for="password" class="block text-gray-700 text-sm font-bold mb-2">Password:</label>
-                        <input type="password" id="password" name="password" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline" placeholder="********">
-                    </div>
-                    <div class="mb-4">
-                        <label for="role" class="block text-gray-700 text-sm font-bold mb-2">Login As:</label>
-                        <select id="role" name="role" class="block appearance-none w-full bg-white border border-gray-400 hover:border-gray-500 px-4 py-2 pr-8 rounded shadow leading-tight focus:outline-none focus:shadow-outline">
-                            <option value="student">Student</option>
-                            <option value="teacher">Teacher</option>
-                            <option value="parent">Parent</option>
-                            <option value="headmaster">Headmaster</option>
-                            <option value="admin">Admin</option>
-                        </select>
-                        <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
-                            <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"/></svg>
-                        </div>
-                    </div>
-                    <div class="flex items-center justify-between">
-                        <button type="submit" class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline transition duration-300">Sign In</button>
-                        <button type="button" id="close-login-modal" class="text-gray-500 hover:text-gray-700 text-sm">Cancel</button>
-                    </div>
-                </form>
-            </div>
+        <div id="dashboard-content" class="flex-1 p-8">
+            <h1 class="text-3xl font-bold text-gray-800 mb-6">Welcome to EduMalawi!</h1>
+            <p class="text-gray-700">Please select a role from the sidebar to view a specific dashboard, or log in to access your personalized portal.</p>
         </div>
-
-        <div id="student-dashboard-section" class="hidden"></div>
-        <div id="teacher-dashboard-section" class="hidden"></div>
-        <div id="parent-dashboard-section" class="hidden"></div>
-        <div id="headmaster-dashboard-section" class="hidden"></div>
-        <div id="admin-dashboard-section" class="hidden"></div>
-
-        <section id="about" class="mb-12 py-12 bg-white rounded-lg shadow-md">
-            <h2 class="text-3xl font-bold text-gray-800 text-center mb-8">About EduMalawi</h2>
-            <div class="max-w-3xl mx-auto text-gray-600 text-lg">
-                <p class="mb-4">EduMalawi is a comprehensive educational platform designed to streamline communication, enhance learning, and simplify administration within schools across Malawi. Our mission is to empower students, support teachers, engage parents, and provide headmasters and administrators with the tools they need to foster a thriving educational environment.</p>
-                <p>From assignment tracking and grade management to school-wide announcements and financial reporting, EduMalawi brings all essential school functions into a single, easy-to-use system.</p>
-            </div>
-        </section>
-
-        <section id="features" class="mb-12 py-12 bg-gray-100 rounded-lg shadow-md">
-            <h2 class="text-3xl font-bold text-gray-800 text-center mb-8">Key Features</h2>
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-5xl mx-auto">
-                <div class="bg-white p-6 rounded-lg shadow-md text-center">
-                    <i class="fas fa-user-graduate text-4xl text-indigo-600 mb-4"></i>
-                    <h3 class="text-xl font-semibold text-gray-800 mb-2">Student Portal</h3>
-                    <p class="text-gray-600">Access assignments, grades, learning resources, and communicate with teachers.</p>
-                </div>
-                <div class="bg-white p-6 rounded-lg shadow-md text-center">
-                    <i class="fas fa-chalkboard-teacher text-4xl text-indigo-600 mb-4"></i>
-                    <h3 class="text-xl font-semibold text-gray-800 mb-2">Teacher Dashboard</h3>
-                    <p class="text-gray-600">Manage classes, post assignments, enter grades, and track student progress.</p>
-                </div>
-                <div class="bg-white p-6 rounded-lg shadow-md text-center">
-                    <i class="fas fa-users text-4xl text-indigo-600 mb-4"></i>
-                    <h3 class="text-xl font-semibold text-gray-800 mb-2">Parent Portal</h3>
-                    <p class="text-gray-600">Monitor child's academic performance, view announcements, and connect with school staff.</p>
-                </div>
-                <div class="bg-white p-6 rounded-lg shadow-md text-center">
-                    <i class="fas fa-user-tie text-4xl text-indigo-600 mb-4"></i>
-                    <h3 class="text-xl font-semibold text-gray-800 mb-2">Headmaster Overview</h3>
-                    <p class="text-gray-600">Gain insights into school performance, manage staff, and oversee curriculum.</p>
-                </div>
-                <div class="bg-white p-6 rounded-lg shadow-md text-center">
-                    <i class="fas fa-cogs text-4xl text-indigo-600 mb-4"></i>
-                    <h3 class="text-xl font-semibold text-gray-800 mb-2">Admin Controls</h3>
-                    <p class="text-gray-600">Full system management, user accounts, course configuration, and system health checks.</p>
-                </div>
-                <div class="bg-white p-6 rounded-lg shadow-md text-center">
-                    <i class="fas fa-comments text-4xl text-indigo-600 mb-4"></i>
-                    <h3 class="text-xl font-semibold text-gray-800 mb-2">Seamless Communication</h3>
-                    <p class="text-gray-600">Integrated messaging and announcement system for all stakeholders.</p>
-                </div>
-            </div>
-        </section>
-
-        <section id="contact" class="py-12 bg-white rounded-lg shadow-md">
-            <h2 class="text-3xl font-bold text-gray-800 text-center mb-8">Contact Us</h2>
-            <div class="max-w-2xl mx-auto px-4">
-                <p class="text-lg text-gray-600 text-center mb-6">Have questions or want to learn more about EduMalawi? Reach out to us!</p>
-                <form class="space-y-4">
-                    <div>
-                        <label for="name" class="block text-gray-700 text-sm font-bold mb-2">Name:</label>
-                        <input type="text" id="name" name="name" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" placeholder="Your Name">
-                    </div>
-                    <div>
-                        <label for="email" class="block text-gray-700 text-sm font-bold mb-2">Email:</label>
-                        <input type="email" id="email" name="email" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" placeholder="Your Email">
-                    </div>
-                    <div>
-                        <label for="message" class="block text-gray-700 text-sm font-bold mb-2">Message:</label>
-                        <textarea id="message" name="message" rows="5" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" placeholder="Your Message"></textarea>
-                    </div>
-                    <div class="text-center">
-                        <button type="submit" class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-6 rounded-full focus:outline-none focus:shadow-outline transition duration-300">Send Message</button>
-                    </div>
-                </form>
-            </div>
-        </section>
-    </main>
-
-    <footer class="gradient-bg text-white py-6 mt-12">
-        <div class="container mx-auto px-4 text-center">
-            <p>&copy; 2023 EduMalawi. All rights reserved.</p>
-            <div class="flex justify-center space-x-4 mt-2">
-                <a href="#" class="hover:text-gray-200"><i class="fab fa-facebook-f"></i></a>
-                <a href="#" class="hover:text-gray-200"><i class="fab fa-twitter"></i></a>
-                <a href="#" class="hover:text-gray-200"><i class="fab fa-linkedin-in"></i></a>
-            </div>
-        </div>
-    </footer>
+    </div>
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            // Mobile menu toggle
-            document.getElementById('mobile-menu-button').addEventListener('click', function() {
-                const menu = document.getElementById('mobile-menu');
-                menu.classList.toggle('hidden');
+            const mobileMenuButton = document.getElementById('mobile-menu-button');
+            const mobileMenu = document.getElementById('mobile-menu');
+            const dashboardContent = document.getElementById('dashboard-content');
+            const sidebarNav = document.getElementById('sidebar-nav');
+
+            mobileMenuButton.addEventListener('click', function() {
+                mobileMenu.classList.toggle('hidden');
             });
 
-            // Login modal functionality
-            const loginButton = document.getElementById('login-button');
-            const mobileLoginButton = document.getElementById('mobile-login-button');
-            const loginModal = document.getElementById('login-modal');
-            const closeLoginModalButton = document.getElementById('close-login-modal');
-            const loginForm = document.getElementById('login-form');
-            const roleSelect = document.getElementById('role');
-
-            function showLoginModal() {
-                loginModal.classList.remove('hidden');
-            }
-
-            function hideLoginModal() {
-                loginModal.classList.add('hidden');
-            }
-
-            loginButton.addEventListener('click', showLoginModal);
-            mobileLoginButton.addEventListener('click', showLoginModal);
-            closeLoginModalButton.addEventListener('click', hideLoginModal);
-
-            loginForm.addEventListener('submit', function(e) {
-                e.preventDefault();
-                const username = document.getElementById('username').value;
-                const password = document.getElementById('password').value;
-                const role = roleSelect.value;
-
-                // In a real application, you would send this to a backend for authentication.
-                // For this front-end demo, we'll simulate a redirect based on role.
-                console.log(`Attempting login as ${role} with username: ${username}, password: ${password}`);
-
-                // Simulate successful login and redirect
-                alert(`Logged in as ${role}! Redirecting to your dashboard.`); // Placeholder alert
-                hideLoginModal(); // Hide the modal after "login"
-
-                // In a real application, you'd navigate:
-                // window.location.href = `/${role}-dashboard.html`;
-
-                // For this unified platform, we'll hide/show sections
-                document.getElementById('student-dashboard-section').classList.add('hidden');
-                document.getElementById('teacher-dashboard-section').classList.add('hidden');
-                document.getElementById('parent-dashboard-section').classList.add('hidden');
-                document.getElementById('headmaster-dashboard-section').classList.add('hidden');
-                document.getElementById('admin-dashboard-section').classList.add('hidden');
-
-                // This part would typically fetch the content of the respective dashboard
-                // and inject it, or simply redirect to the actual dashboard page.
-                // For a truly unified experience, you'd load content dynamically here.
-                // Example (simplified):
-                switch(role) {
-                    case 'student':
-                        // alert('Loading student dashboard content...');
-                        // document.getElementById('student-dashboard-section').classList.remove('hidden');
-                        window.location.href = 'student-dashboard.html'; // Redirect to actual dashboard file
-                        break;
-                    case 'teacher':
-                        // alert('Loading teacher dashboard content...');
-                        // document.getElementById('teacher-dashboard-section').classList.remove('hidden');
-                        window.location.href = 'teacher-dashboard.html';
-                        break;
-                    case 'parent':
-                        // alert('Loading parent dashboard content...');
-                        // document.getElementById('parent-dashboard-section').classList.remove('hidden');
-                        window.location.href = 'parent-dashboard.html';
-                        break;
-                    case 'headmaster':
-                        // alert('Loading headmaster dashboard content...');
-                        // document.getElementById('headmaster-dashboard-section').classList.remove('hidden');
-                        window.location.href = 'headmaster-dashboard.html';
-                        break;
-                    case 'admin':
-                        // alert('Loading admin dashboard content...');
-                        // document.getElementById('admin-dashboard-section').classList.remove('hidden');
-                        window.location.href = 'admin-dashboard.html';
-                        break;
-                }
-            });
-
-            // Close modals when clicking outside
-            window.addEventListener('click', function(event) {
-                if (event.target === loginModal) {
-                    hideLoginModal();
-                }
-                // Existing timer modal closing logic (if any)
-                // if (event.target === assignmentModal) {
-                //     assignmentModal.classList.add('hidden');
-                //     clearInterval(timerInterval);
-                // }
-                // if (event.target === paymentModal) {
-                //     paymentModal.classList.add('hidden');
-                // }
-            });
-
-            // --- Real-time Notifications Logic START ---
+            // --- Real-time Notifications Logic START (Copied from previous steps) ---
             const notificationBell = document.getElementById('notification-bell');
             const notificationBadge = document.getElementById('notification-badge');
             const notificationsDropdown = document.getElementById('notifications-dropdown');
             const notificationList = document.getElementById('notification-list');
             const markAllReadBtn = document.getElementById('mark-all-read');
 
-            let notifications = [
-                { id: 1, message: 'New assignment posted: Mathematics - Algebra II', read: false, time: '2 hours ago' },
-                { id: 2, message: 'Your grade for English Literature is A-', read: false, time: 'yesterday' },
-                { id: 3, message: 'School wide announcement: Parent-Teacher Conference on June 20th.', read: true, time: '2 days ago' }
-            ];
+            let notifications = []; // Initialize empty for the main index page
 
             function updateNotificationsUI() {
                 notificationList.innerHTML = ''; // Clear existing list
@@ -361,9 +184,6 @@
                     notificationBadge.classList.add('hidden');
                 }
             }
-
-            // Initial UI update
-            updateNotificationsUI();
 
             // Toggle dropdown
             notificationBell.addEventListener('click', function(event) {
@@ -401,7 +221,7 @@
                 }
             });
 
-            // Example of adding a new notification (simulate a real-time event)
+            // Example of adding a new notification (simulate a real-time event for the main page)
             function addNewNotification(message) {
                 const newId = notifications.length > 0 ? Math.max(...notifications.map(n => n.id)) + 1 : 1;
                 notifications.unshift({ id: newId, message: message, read: false, time: 'just now' });
@@ -412,11 +232,184 @@
                 }
             }
 
-            // Simulate new notification after 10 seconds for testing
+            // Simulate a general platform notification after 10 seconds
             setTimeout(() => {
-                addNewNotification('New message from Headmaster: Important update regarding school holidays.');
+                addNewNotification('Welcome! Explore the new EduMalawi unified platform features.');
             }, 10000);
             // --- Real-time Notifications Logic END ---
+
+
+            // --- Dashboard Loading Logic START ---
+            async function loadDashboard(role) {
+                try {
+                    const response = await fetch(`${role}-dashboard-partial.html`);
+                    if (!response.ok) {
+                        throw new Error(`Could not load ${role} dashboard: ${response.statusText}`);
+                    }
+                    const content = await response.text();
+                    dashboardContent.innerHTML = content;
+
+                    // Update sidebar active state
+                    document.querySelectorAll('#sidebar-nav a').forEach(link => {
+                        link.classList.remove('active');
+                    });
+                    document.querySelector(`#sidebar-nav a[data-role="${role}"]`).classList.add('active');
+
+                    // If a dashboard has specific JS, it needs to be re-executed
+                    // This is a simplified approach; for complex dashboards, consider
+                    // re-initializing specific JS functionalities after content load.
+                    // For now, assume most JS is globally applicable or simple event listeners.
+
+                    // Special handling for the student dashboard timer if loaded
+                    if (role === 'student' && typeof startTimer === 'function') {
+                         // Reset and start timer if student dashboard is loaded
+                         const timerElement = document.getElementById('timer');
+                         if (timerElement) {
+                             timerElement.textContent = "00:00"; // Reset visual
+                             if (window.timerInterval) clearInterval(window.timerInterval); // Clear any existing timer
+                             startTimer(); // Restart the timer
+                         }
+                    }
+
+                    // Special handling for parent dashboard modal
+                    if (role === 'parent') {
+                        const openHeadmasterBtn = document.getElementById('open-headmaster-modal');
+                        const headmasterContactModal = document.getElementById('headmaster-contact-modal');
+                        const closeHeadmasterModalBtn = document.getElementById('close-headmaster-modal');
+                        const cancelHeadmasterContactBtn = document.getElementById('cancel-headmaster-contact');
+                        const headmasterContactForm = document.getElementById('headmaster-contact-form');
+
+                        if (openHeadmasterBtn) {
+                            openHeadmasterBtn.addEventListener('click', function() {
+                                if (headmasterContactModal) headmasterContactModal.classList.remove('hidden');
+                            });
+                        }
+                        if (closeHeadmasterModalBtn) {
+                            closeHeadmasterModalBtn.addEventListener('click', hideHeadmasterModal);
+                        }
+                        if (cancelHeadmasterContactBtn) {
+                            cancelHeadmasterContactBtn.addEventListener('click', hideHeadmasterModal);
+                        }
+
+                        function hideHeadmasterModal() {
+                            if (headmasterContactModal) headmasterContactModal.classList.add('hidden');
+                            if (headmasterContactForm) headmasterContactForm.reset();
+                        }
+                        if (headmasterContactForm) {
+                            headmasterContactForm.addEventListener('submit', function(e) {
+                                e.preventDefault();
+                                const subject = document.getElementById('headmaster-subject').value;
+                                const message = document.getElementById('headmaster-message').value;
+
+                                if (subject && message) {
+                                    alert(`Message to Headmaster Sent!\\nSubject: ${subject}\\nMessage: ${message}\\n\\n(Note: This is a front-end demo. Actual message sending requires a backend.)`);
+                                    hideHeadmasterModal();
+                                } else {
+                                    alert('Please fill in both the subject and your message to the Headmaster.');
+                                }
+                            });
+                        }
+
+                         // Re-attach listener for closing modal by clicking outside
+                        window.addEventListener('click', function(event) {
+                            if (event.target === headmasterContactModal) {
+                                hideHeadmasterModal();
+                            }
+                        });
+                    }
+
+                    // For the student dashboard specific timer. Need to define it globally if it's meant to persist.
+                    // This is a rough example; in a real app, module patterns or frameworks would manage this better.
+                    if (role === 'student') {
+                        const assignmentModal = document.getElementById('assignment-modal');
+                        const openAssignmentModalBtn = document.getElementById('open-assignment-modal');
+                        const closeAssignmentModalBtn = document.getElementById('close-assignment-modal');
+                        let timerInterval;
+
+                        if (openAssignmentModalBtn) {
+                            openAssignmentModalBtn.addEventListener('click', function() {
+                                if (assignmentModal) assignmentModal.classList.remove('hidden');
+                                if (timerInterval) clearInterval(timerInterval); // Clear any old timer
+                                startTimer();
+                            });
+                        }
+
+                        if (closeAssignmentModalBtn) {
+                            closeAssignmentModalBtn.addEventListener('click', function() {
+                                if (assignmentModal) assignmentModal.classList.add('hidden');
+                                if (timerInterval) clearInterval(timerInterval);
+                            });
+                        }
+
+                        function startTimer() {
+                            let minutes = 59;
+                            let seconds = 45;
+                            const timerElement = document.getElementById('timer');
+
+                            timerInterval = setInterval(() => {
+                                if (seconds === 0) {
+                                    if (minutes === 0) {
+                                        clearInterval(timerInterval);
+                                        timerElement.textContent = "Time's up!";
+                                        return;
+                                    }
+                                    minutes--;
+                                    seconds = 59;
+                                } else {
+                                    seconds--;
+                                }
+
+                                const formattedMinutes = minutes < 10 ? `0${minutes}` : minutes;
+                                const formattedSeconds = seconds < 10 ? `0${seconds}` : seconds;
+                                timerElement.textContent = `${formattedMinutes}:${formattedSeconds}`;
+                            }, 1000);
+                             window.timerInterval = timerInterval; // Make it globally accessible to clear
+                        }
+
+                        const paymentModal = document.getElementById('payment-modal');
+                        const openPaymentModalBtn = document.getElementById('open-payment-modal');
+                        const closePaymentModalBtn = document.getElementById('close-payment-modal');
+
+                        if (openPaymentModalBtn) {
+                            openPaymentModalBtn.addEventListener('click', function() {
+                                if (paymentModal) paymentModal.classList.remove('hidden');
+                            });
+                        }
+                        if (closePaymentModalBtn) {
+                            closePaymentModalBtn.addEventListener('click', function() {
+                                if (paymentModal) paymentModal.classList.add('hidden');
+                            });
+                        }
+
+                        // Close modals when clicking outside specifically for student dashboard modals
+                        window.addEventListener('click', function(event) {
+                            if (event.target === assignmentModal) {
+                                if (assignmentModal) assignmentModal.classList.add('hidden');
+                                if (timerInterval) clearInterval(timerInterval);
+                            }
+                            if (event.target === paymentModal) {
+                                if (paymentModal) paymentModal.classList.add('hidden');
+                            }
+                        });
+                    }
+                } catch (error) {
+                    console.error("Error loading dashboard:", error);
+                    dashboardContent.innerHTML = `<p class="text-red-500">Failed to load dashboard. Please try again or check the file path.</p>`;
+                }
+            }
+
+            // Event listeners for sidebar role selection
+            sidebarNav.addEventListener('click', function(event) {
+                event.preventDefault(); // Prevent default link behavior
+                const targetLink = event.target.closest('a');
+                if (targetLink && targetLink.dataset.role) {
+                    loadDashboard(targetLink.dataset.role);
+                }
+            });
+
+            // Load student dashboard by default on page load (or based on a real login)
+            loadDashboard('student');
+            // --- Dashboard Loading Logic END ---
         });
     </script>
 </body>
