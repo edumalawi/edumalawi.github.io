@@ -421,11 +421,19 @@
                     const data = await response.json();
                     if (response.ok) {
                         showMessage(data.message, 'success');
-                        // In a real application, you'd store a token (JWT) and redirect
-                        // For this demo, we'll just hide the modal after success
-                        authModal.classList.add('hidden');
-                        // Example redirection based on role (you'd have separate dashboards)
-                        // setTimeout(() => { window.location.href = `/${role}-dashboard.html`; }, 500);
+                        authModal.classList.add('hidden'); // Hide the modal after success
+
+                        // Redirect based on role
+                        if (role === 'admin') {
+                            window.location.href = '/admin-dashboard.html'; // Redirect to admin dashboard
+                        }
+                        // Add more role-based redirects here if needed for other dashboards
+                        // else if (role === 'student') {
+                        //     window.location.href = '/student-dashboard.html';
+                        // }
+                        // else {
+                        //     // Default action for other roles, e.g., simply close modal or show welcome.
+                        // }
                     } else {
                         showMessage(data.message || 'Login failed. Please try again.', 'error');
                     }
@@ -442,7 +450,7 @@
                 const email = document.getElementById('signup-email').value;
                 const phoneNumber = signupPhoneInput.value;
                 const password = document.getElementById('signup-password').value;
-                const confirmPassword = document.getElementById('signup-confirm-password').값;
+                const confirmPassword = document.getElementById('signup-confirm-password').value; // Corrected to .value
                 const role = signupRoleSelect.value;
 
                 if (!username || !email || !phoneNumber || !password || !confirmPassword) {
