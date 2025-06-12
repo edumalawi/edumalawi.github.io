@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EduMalawi - Parent Portal</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* Custom CSS for features Tailwind doesn't cover easily */
+        .gradient-bg {
+            background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
+        }
+        .sidebar {
+            transition: all 0.3s ease;
+        }
+        .portal-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+        }
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+        .pulse {
+            animation: pulse 1.5s infinite;
+        }
+        /* Modals are hidden by default */
+        .modal {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 50;
+            overflow-y: auto;
+        }
+    </style>
+</head>
+<body class="bg-gray-50 font-sans">
+    <nav class="gradient-bg text-white shadow-lg">
+        <div class="container mx-auto px-4 py-3 flex justify-between items-center">
+            <div class="flex items-center space-x-2">
+                <i class="fas fa-book-open text-2xl"></i>
+                <span class="text-xl font-bold">EduMalawi</span>
+            </div>
+            <div class="hidden md:flex items-center space-x-4">
+                <a href="#" class="hover:text-gray-200">Dashboard</a>
+                <a href="#" class="hover:text-gray-200">Children</a>
+                <a href="#" class="hover:text-gray-200">Payments</a>
+                <a href="#" class="hover:text-gray-200">Messages</a>
+                <button class="bg-red-600 text-white px-4 py-2 rounded-full hover:bg-red-700 transition duration-300">Logout</button>
+            </div>
+
+            <div class="relative ml-4">
+                <button id="notification-bell" class="relative p-2 rounded-full hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                    <i class="fas fa-bell text-white text-xl"></i>
+                    <span id="notification-badge" class="absolute top-0 right-0 inline-flex items-center justify-center px-2 py-1 text-xs font-bold leading-none text-red-100 transform translate-x-1/2 -translate-y-1/2 bg-red-600 rounded-full hidden">0</span>
+                </button>
+
+                <div id="notifications-dropdown" class="absolute right-0 mt-2 w-80 bg-white border border-gray-200 rounded-lg shadow-lg z-50 hidden">
+                    <div class="p-4">
+                        <h3 class="font-semibold text-gray-800 border-b pb-2 mb-2">Notifications</h3>
+                        <ul id="notification-list" class="divide-y divide-gray-200">
+                            <li class="py-2 text-gray-700 text-sm">No new notifications.</li>
+                        </ul>
+                        <div class="text-right mt-2">
+                            <button id="mark-all-read" class="text-indigo-600 hover:text-indigo-800 text-xs font-medium">Mark all as read</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="md:hidden">
+                <button id="mobile-menu-button" class="text-white text-2xl focus:outline-none">
+                    <i class="fas fa-bars"></i>
+                </button>
+            </div>
+        </div>
+        <div id="mobile-menu" class="hidden md:hidden bg-indigo-700">
+            <a href="#" class="block px-4 py-2 text-sm text-white hover:bg-indigo-800">Dashboard</a>
+            <a href="#" class="block px-4 py-2 text-sm text-white hover:bg-indigo-800">Children</a>
+            <a href="#" class="block px-4 py-2 text-sm text-white hover:bg-indigo-800">Payments</a>
+            <a href="#" class="block px-4 py-2 text-sm text-white hover:bg-indigo-800">Messages</a>
+            <button class="block w-full text-left px-4 py-2 text-sm text-white hover:bg-indigo-800">Logout</button>
+        </div>
+    </nav>
+
+    <div class="flex">
+        <aside class="w-64 bg-gray-800 text-white min-h-screen p-6 hidden md:block">
+            <h2 class="text-2xl font-bold mb-6">Parent Panel</h2>
+            <nav>
+                <ul>
+                    <li class="mb-4">
+                        <a href="#" class="flex items-center text-gray-300 hover:text-white transition duration-200">
+                            <i class="fas fa-tachometer-alt mr-3"></i> Dashboard
+                        </a>
+                    </li>
+                    <li class="mb-4">
+                        <a href="#" class="flex items-center text-gray-300 hover:text-white transition duration-200">
+                            <i class="fas fa-child mr-3"></i> My Children
+                        </a>
+                    </li>
+                    <li class="mb-4">
+                        <a href="#" class="flex items-center text-gray-300 hover:text-white transition duration-200">
+                            <i class="fas fa-money-check-alt mr-3"></i> Payments
+                        </a>
+                    </li>
+                    <li class="mb-4">
+                        <a href="#" class="flex items-center text-gray-300 hover:text-white transition duration-200">
+                            <i class="fas fa-comments mr-3"></i> Messages
+                        </a>
+                    </li>
+                    <li class="mb-4">
+                        <a href="#" id="open-headmaster-contact-modal" class="flex items-center text-gray-300 hover:text-white transition duration-200">
+                            <i class="fas fa-user-tie mr-3"></i> Contact Headmaster
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+        </aside>
+
+        <div class="flex-1 p-8">
+            <h1 class="text-3xl font-bold text-gray-800 mb-6">Parent Dashboard</h1>
+
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
+                <div class="bg-white p-6 rounded-lg shadow-md col-span-2">
+                    <h2 class="text-2xl font-semibold text-gray-800 mb-4">My Children's Overview</h2>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div class="border rounded-lg p-4 bg-blue-50">
+                            <h3 class="font-bold text-lg text-blue-800 mb-2">Chisomo Banda</h3>
+                            <p class="text-gray-700 text-sm mb-1">Grade: 7</p>
+                            <p class="text-gray-700 text-sm mb-1">Teacher: Mr. Phiri</p>
+                            <p class="text-gray-700 text-sm mb-1">Last Grade: Mathematics (B+)</p>
+                            <p class="text-gray-700 text-sm">Upcoming: Science Project (Due June 20)</p>
+                            <button class="mt-3 text-indigo-600 hover:text-indigo-800 text-sm font-semibold">View Full Profile</button>
+                        </div>
+                        <div class="border rounded-lg p-4 bg-green-50">
+                            <h3 class="font-bold text-lg text-green-800 mb-2">Dalitso Tembo</h3>
+                            <p class="text-gray-700 text-sm mb-1">Grade: 4</p>
+                            <p class="text-gray-700 text-sm mb-1">Teacher: Ms. Zulu</p>
+                            <p class="text-gray-700 text-sm mb-1">Last Grade: English (A)</p>
+                            <p class="text-gray-700 text-sm">Upcoming: School Trip Consent (Due June 18)</p>
+                            <button class="mt-3 text-indigo-600 hover:text-indigo-800 text-sm font-semibold">View Full Profile</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-white p-6 rounded-lg shadow-md">
+                    <h2 class="text-2xl font-semibold text-gray-800 mb-4">Announcements</h2>
+                    <ul class="list-disc list-inside text-gray-700">
+                        <li class="mb-2">Parent-Teacher Conference on June 20th. <span class="text-gray-500 text-sm">10:00 AM - 4:00 PM</span></li>
+                        <li class="mb-2">School holiday announcement for July 1st. <span class="text-gray-500 text-sm">Effective next month</span></li>
+                        <li>Reminder: School fees due by end of month. <span class="text-gray-500 text-sm">June 30th</span></li>
+                    </ul>
+                    <div class="mt-6">
+                        <h3 class="font-semibold text-lg text-gray-800 mb-2">Quick Actions</h3>
+                        <div class="grid grid-cols-2 gap-3">
+                            <button class="bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700 text-sm"><i class="fas fa-money-check-alt mr-2"></i>Make Payment</button>
+                            <button class="bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700 text-sm"><i class="fas fa-envelope mr-2"></i>Message Teacher</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                <div class="bg-white p-6 rounded-lg shadow-md">
+                    <h2 class="text-2xl font-semibold text-gray-800 mb-4">Academic Progress (Chisomo)</h2>
+                    <p class="text-gray-700 mb-4">Recent grades and attendance summary.</p>
+                    <div class="flex items-center justify-between mb-2">
+                        <span class="text-gray-700">Mathematics:</span>
+                        <div class="w-2/3 bg-gray-200 rounded-full h-2.5">
+                            <div class="bg-blue-600 h-2.5 rounded-full" style="width: 85%;"></div>
+                        </div>
+                        <span class="text-gray-700 text-sm">85%</span>
+                    </div>
+                    <div class="flex items-center justify-between mb-2">
+                        <span class="text-gray-700">English:</span>
+                        <div class="w-2/3 bg-gray-200 rounded-full h-2.5">
+                            <div class="bg-green-600 h-2.5 rounded-full" style="width: 92%;"></div>
+                        </div>
+                        <span class="text-gray-700 text-sm">92%</span>
+                    </div>
+                    <div class="flex items-center justify-between">
+                        <span class="text-gray-700">Attendance:</span>
+                        <div class="w-2/3 bg-gray-200 rounded-full h-2.5">
+                            <div class="bg-yellow-500 h-2.5 rounded-full" style="width: 95%;"></div>
+                        </div>
+                        <span class="text-gray-700 text-sm">95%</span>
+                    </div>
+                    <button class="mt-6 bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700"><i class="fas fa-chart-line mr-2"></i>View Detailed Report</button>
+                </div>
+
+                <div class="grid grid-cols-1 gap-6">
+                    <div class="bg-white p-6 rounded-lg shadow-md">
+                        <h2 class="text-2xl font-semibold text-gray-800 mb-4">Important Contacts</h2>
+                        <ul class="list-disc list-inside text-gray-700">
+                            <li class="mb-2">Mr. Phiri (Chisomo's Teacher): <a href="mailto:phiri@edumalawi.org" class="text-indigo-600 hover:underline">phiri@edumalawi.org</a></li>
+                            <li class="mb-2">Ms. Zulu (Dalitso's Teacher): <a href="mailto:zulu@edumalawi.org" class="text-indigo-600 hover:underline">zulu@edumalawi.org</a></li>
+                            <li>School Office: <a href="tel:+2651234567" class="text-indigo-600 hover:underline">+265 1 234 567</a></li>
+                        </ul>
+                    </div>
+                    <div class="bg-indigo-50 border-l-4 border-indigo-500 text-indigo-800 p-4 rounded-lg">
+                        <h3 class="font-semibold text-lg">Support Resources:</h3>
+                        <ul class="list-disc list-inside mt-2">
+                            <li><a href="#" class="text-indigo-600 hover:underline">FAQs for Parents</a></li>
+                            <li><a href="#" class="text-indigo-600 hover:underline">School Policy Handbook</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            </div>
+    </div>
+
+    <div id="headmaster-contact-modal" class="modal hidden">
+        <div class="bg-white p-8 rounded-lg shadow-xl w-full max-w-md">
+            <h2 class="text-2xl font-bold mb-6 text-gray-800 text-center">Contact Headmaster</h2>
+            <form id="headmaster-contact-form">
+                <div class="mb-4">
+                    <label for="headmaster-subject" class="block text-gray-700 text-sm font-bold mb-2">Subject:</label>
+                    <input type="text" id="headmaster-subject" name="subject" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" placeholder="e.g., Inquiry about fees, Meeting request">
+                </div>
+                <div class="mb-6">
+                    <label for="headmaster-message" class="block text-gray-700 text-sm font-bold mb-2">Message:</label>
+                    <textarea id="headmaster-message" name="message" rows="5" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline" placeholder="Your message..."></textarea>
+                </div>
+                <div class="flex items-center justify-between">
+                    <button type="submit" class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline transition duration-300">Send Message</button>
+                    <button type="button" id="cancel-headmaster-contact" class="text-gray-500 hover:text-gray-700 text-sm">Cancel</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            document.getElementById('mobile-menu-button').addEventListener('click', function() {
+                const menu = document.getElementById('mobile-menu');
+                menu.classList.toggle('hidden');
+            });
+
+            // Headmaster Contact Modal functionality
+            const headmasterContactModal = document.getElementById('headmaster-contact-modal');
+            const openHeadmasterBtn = document.getElementById('open-headmaster-contact-modal');
+            const closeHeadmasterModalBtn = document.getElementById('close-headmaster-contact-modal');
+            const cancelHeadmasterContactBtn = document.getElementById('cancel-headmaster-contact');
+            const headmasterContactForm = document.getElementById('headmaster-contact-form');
+
+            openHeadmasterBtn.addEventListener('click', function() {
+                headmasterContactModal.classList.remove('hidden');
+            });
+
+            function hideHeadmasterModal() {
+                headmasterContactModal.classList.add('hidden');
+                headmasterContactForm.reset(); // Clear form fields on close
+            }
+
+            closeHeadmasterModalBtn.addEventListener('click', hideHeadmasterModal);
+            cancelHeadmasterContactBtn.addEventListener('click', hideHeadmasterModal);
+
+            // Close modals when clicking outside
+            window.addEventListener('click', function(event) {
+                if (event.target === headmasterContactModal) {
+                    hideHeadmasterModal();
+                }
+            });
+
+            // Handle Headmaster Message submission for demo purposes
+            headmasterContactForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                const subject = document.getElementById('headmaster-subject').value;
+                const message = document.getElementById('headmaster-message').value;
+
+                if (subject && message) {
+                    alert(`Message to Headmaster Sent!\\nSubject: ${subject}\\nMessage: ${message}\\n\\n(Note: This is a front-end demo. Actual message sending requires a backend.)`);
+                    hideHeadmasterModal();
+                } else {
+                    alert('Please fill in both the subject and your message to the Headmaster.');
+                }
+            });
+
+            // --- Real-time Notifications Logic START ---
+            const notificationBell = document.getElementById('notification-bell');
+            const notificationBadge = document.getElementById('notification-badge');
+            const notificationsDropdown = document.getElementById('notifications-dropdown');
+            const notificationList = document.getElementById('notification-list');
+            const markAllReadBtn = document.getElementById('mark-all-read');
+
+            let notifications = [
+                { id: 1, message: "New grade posted for Chisomo: Mathematics (B+)", read: false, time: '30 mins ago' },
+                { id: 2, message: "School fees reminder: Due by June 30th.", read: false, time: '2 hours ago' },
+                { id: 3, message: "Announcement: Parent-Teacher Conference on June 20th.", read: true, time: 'yesterday' }
+            ];
+
+            function updateNotificationsUI() {
+                notificationList.innerHTML = ''; // Clear existing list
+                let unreadCount = 0;
+
+                if (notifications.length === 0) {
+                    notificationList.innerHTML = '<li class="py-2 text-gray-700 text-sm">No new notifications.</li>';
+                } else {
+                    notifications.forEach(notif => {
+                        const li = document.createElement('li');
+                        li.classList.add('py-2', 'text-gray-700', 'text-sm', 'flex', 'justify-between', 'items-center');
+                        if (!notif.read) {
+                            li.classList.add('font-semibold', 'text-gray-900');
+                            unreadCount++;
+                        }
+
+                        li.innerHTML = `
+                            <div>${notif.message} <span class="text-gray-500 text-xs ml-1">${notif.time}</span></div>
+                            <button data-id="${notif.id}" class="mark-as-read text-indigo-500 hover:text-indigo-700 text-xs">${notif.read ? '<i class="fas fa-check-circle"></i>' : '<i class="fas fa-circle"></i>'}</button>
+                        `;
+                        notificationList.appendChild(li);
+                    });
+                }
+
+                if (unreadCount > 0) {
+                    notificationBadge.textContent = unreadCount;
+                    notificationBadge.classList.remove('hidden');
+                } else {
+                    notificationBadge.classList.add('hidden');
+                }
+            }
+
+            // Initial UI update
+            updateNotificationsUI();
+
+            // Toggle dropdown
+            notificationBell.addEventListener('click', function(event) {
+                event.stopPropagation(); // Prevent document click from closing immediately
+                notificationsDropdown.classList.toggle('hidden');
+                // Mark all currently displayed as read when opened
+                notifications.forEach(notif => notif.read = true);
+                updateNotificationsUI();
+            });
+
+            // Mark individual notification as read
+            notificationList.addEventListener('click', function(event) {
+                if (event.target.classList.contains('mark-as-read') || event.target.closest('.mark-as-read')) {
+                    const button = event.target.closest('.mark-as-read');
+                    const notifId = parseInt(button.dataset.id);
+                    const notifIndex = notifications.findIndex(n => n.id === notifId);
+                    if (notifIndex !== -1) {
+                        notifications[notifIndex].read = true;
+                        updateNotificationsUI();
+                    }
+                }
+            });
+
+            // Mark all notifications as read button
+            markAllReadBtn.addEventListener('click', function() {
+                notifications.forEach(notif => notif.read = true);
+                updateNotificationsUI();
+                notificationsDropdown.classList.add('hidden'); // Close dropdown after marking all as read
+            });
+
+            // Close dropdown when clicking outside
+            window.addEventListener('click', function(event) {
+                if (!notificationBell.contains(event.target) && !notificationsDropdown.contains(event.target)) {
+                    notificationsDropdown.classList.add('hidden');
+                }
+            });
+
+            // Example of adding a new notification (simulate a real-time event for parents)
+            function addNewNotification(message) {
+                const newId = notifications.length > 0 ? Math.max(...notifications.map(n => n.id)) + 1 : 1;
+                notifications.unshift({ id: newId, message: message, read: false, time: 'just now' });
+                updateNotificationsUI();
+                if (notificationsDropdown.classList.contains('hidden')) {
+                    notificationBadge.classList.remove('hidden');
+                    notificationBadge.textContent = parseInt(notificationBadge.textContent) + 1;
+                }
+            }
+
+            // Simulate a new parent notification after 15 seconds
+            setTimeout(() => {
+                addNewNotification('Your child Dalitso has a new assignment posted: Art Project.');
+            }, 15000);
+            // --- Real-time Notifications Logic END ---
+        });
+    </script>
+</body>
+</html>
