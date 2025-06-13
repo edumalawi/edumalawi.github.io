@@ -6,426 +6,103 @@
     <title>EduMalawi - Admin Dashboard</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <style>
-        .gradient-bg { background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%); }
-        .sidebar { transition: all 0.3s ease; }
+    <link rel="stylesheet" href="css/style.css"> <style>
+        /* Any page-specific styles can remain here or be moved to style.css if global */
         .modal {
             position: fixed; inset: 0; background: rgba(0, 0, 0, 0.5);
             display: flex; align-items: center; justify-content: center; z-index: 50; overflow-y: auto;
         }
     </style>
 </head>
-<body class="bg-gray-50 font-sans">
-    <nav class="gradient-bg text-white shadow-lg">
-        <div class="container mx-auto px-4 py-3 flex justify-between items-center">
-            <div class="flex items-center space-x-2">
-                <i class="fas fa-book-open text-2xl"></i>
-                <span class="text-xl font-bold">EduMalawi</span>
-            </div>
-            <div class="hidden md:flex items-center space-x-4">
-                <a href="admin-dashboard.html" class="hover:text-gray-200 font-bold">Dashboard</a>
-                <a href="user_management.html" class="hover:text-gray-200">Users</a>
-                <a href="#" class="hover:text-gray-200">Courses</a>
-                <a href="#" class="hover:text-gray-200">Settings</a>
-                <button class="bg-red-600 text-white px-4 py-2 rounded-full hover:bg-red-700 transition duration-300 logout-btn">Logout</button>
-            </div>
+<body class="bg-gray-50 font-sans flex">
+    <div id="navbar-placeholder"></div>
 
-            <div class="relative ml-4">
-                <button id="notification-bell" class="relative p-2 rounded-full hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
-                    <i class="fas fa-bell text-white text-xl"></i>
-                    <span id="notification-badge" class="absolute top-0 right-0 inline-flex items-center justify-center px-2 py-1 text-xs font-bold leading-none text-red-100 transform translate-x-1/2 -translate-y-1/2 bg-red-600 rounded-full hidden">0</span>
-                </button>
+    <div class="flex flex-1">
+        <div id="sidebar-placeholder"></div>
 
-                <div id="notifications-dropdown" class="absolute right-0 mt-2 w-80 bg-white border border-gray-200 rounded-lg shadow-lg z-50 hidden">
-                    <div class="p-4">
-                        <h3 class="font-semibold text-gray-800 border-b pb-2 mb-2">Notifications</h3>
-                        <ul id="notification-list" class="divide-y divide-gray-200">
-                            <li class="py-2 text-gray-700 text-sm">No new notifications.</li>
-                        </ul>
-                        <div class="text-right mt-2">
-                            <button id="mark-all-read" class="text-indigo-600 hover:text-indigo-800 text-xs font-medium">Mark all as read</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="md:hidden">
-                <button id="mobile-menu-button" class="text-white text-2xl focus:outline-none">
-                    <i class="fas fa-bars"></i>
-                </button>
-            </div>
-        </div>
-        <div id="mobile-menu" class="hidden md:hidden bg-indigo-700">
-            <a href="admin-dashboard.html" class="block px-4 py-2 text-sm text-white hover:bg-indigo-800">Dashboard</a>
-            <a href="user_management.html" class="block px-4 py-2 text-sm text-white hover:bg-indigo-800">Users</a>
-            <a href="#" class="block px-4 py-2 text-sm text-white hover:bg-indigo-800">Courses</a>
-            <a href="#" class="block px-4 py-2 text-sm text-white hover:bg-indigo-800">Settings</a>
-            <button class="block w-full text-left px-4 py-2 text-sm text-white hover:bg-indigo-800 logout-btn">Logout</button>
-        </div>
-    </nav>
-
-    <div class="flex">
-        <aside class="w-64 bg-gray-800 text-white min-h-screen p-6 hidden md:block">
-            <h2 class="text-2xl font-bold mb-6">Admin Panel</h2>
-            <nav>
-                <ul>
-                    <li class="mb-4">
-                        <a href="admin-dashboard.html" class="flex items-center text-white font-bold transition duration-200">
-                            <i class="fas fa-tachometer-alt mr-3"></i> Dashboard
-                        </a>
-                    </li>
-                    <li class="mb-4">
-                        <a href="user_management.html" class="flex items-center text-gray-300 hover:text-white transition duration-200">
-                            <i class="fas fa-users mr-3"></i> User Management
-                        </a>
-                    </li>
-                    <li class="mb-4">
-                        <a href="#" class="flex items-center text-gray-300 hover:text-white transition duration-200">
-                            <i class="fas fa-book mr-3"></i> Course Management
-                        </a>
-                    </li>
-                    <li class="mb-4">
-                        <a href="#" class="flex items-center text-gray-300 hover:text-white transition duration-200">
-                            <i class="fas fa-cogs mr-3"></i> System Settings
-                        </a>
-                    </li>
-                    <li class="mb-4">
-                        <a href="#" class="flex items-center text-gray-300 hover:text-white transition duration-200">
-                            <i class="fas fa-chart-line mr-3"></i> Reports
-                        </a>
-                    </li>
-                </ul>
-            </nav>
-        </aside>
-
-        <div class="flex-1 p-8">
+        <main class="flex-1 p-6">
             <h1 class="text-3xl font-bold text-gray-800 mb-6">Admin Dashboard</h1>
 
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-6">
-                <div class="bg-blue-50 p-6 rounded-lg shadow-md flex items-center justify-between">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+                <div class="bg-white p-6 rounded-lg shadow-md flex items-center justify-between">
                     <div>
-                        <h3 class="text-lg font-semibold text-gray-700">Total Users</h3>
-                        <p class="text-3xl font-bold text-blue-700 mt-2">0</p>
+                        <h3 class="text-gray-500 text-sm font-medium">Total Users</h3>
+                        <p id="total-users" class="text-3xl font-semibold text-gray-900">0</p>
                     </div>
-                    <i class="fas fa-users text-4xl text-blue-400"></i>
+                    <i class="fas fa-users text-4xl text-indigo-500"></i>
                 </div>
-                <div class="bg-green-50 p-6 rounded-lg shadow-md flex items-center justify-between">
+                <div class="bg-white p-6 rounded-lg shadow-md flex items-center justify-between">
                     <div>
-                        <h3 class="text-lg font-semibold text-gray-700">Active Courses</h3>
-                        <p class="text-3xl font-bold text-green-700 mt-2">12</p>
+                        <h3 class="text-gray-500 text-sm font-medium">Active Courses</h3>
+                        <p id="active-courses" class="text-3xl font-semibold text-gray-900">0</p>
                     </div>
-                    <i class="fas fa-book-open text-4xl text-green-400"></i>
+                    <i class="fas fa-book-open text-4xl text-green-500"></i>
                 </div>
-                <div class="bg-yellow-50 p-6 rounded-lg shadow-md flex items-center justify-between">
+                <div class="bg-white p-6 rounded-lg shadow-md flex items-center justify-between">
                     <div>
-                        <h3 class="text-lg font-semibold text-gray-700">Pending Issues</h3>
-                        <p class="text-3xl font-bold text-yellow-700 mt-2">5</p>
+                        <h3 class="text-gray-500 text-sm font-medium">Pending Approvals</h3>
+                        <p id="pending-approvals" class="text-3xl font-semibold text-gray-900">0</p>
                     </div>
-                    <i class="fas fa-exclamation-triangle text-4xl text-yellow-400"></i>
+                    <i class="fas fa-user-check text-4xl text-yellow-500"></i>
                 </div>
-                <div class="bg-purple-50 p-6 rounded-lg shadow-md flex items-center justify-between">
+                <div class="bg-white p-6 rounded-lg shadow-md flex items-center justify-between">
                     <div>
-                        <h3 class="text-lg font-semibold text-gray-700">New Registrations Today</h3>
-                        <p class="text-3xl font-bold text-purple-700 mt-2">3</p>
+                        <h3 class="text-gray-500 text-sm font-medium">System Health</h3>
+                        <p id="system-health" class="text-3xl font-semibold text-gray-900">Good</p>
                     </div>
-                    <i class="fas fa-user-plus text-4xl text-purple-400"></i>
+                    <i class="fas fa-heartbeat text-4xl text-red-500"></i>
                 </div>
             </div>
 
-            <div class="bg-white p-6 rounded-lg shadow-md mb-6">
-                <h2 class="text-2xl font-semibold text-gray-800 mb-4">Quick Actions</h2>
-                <div class="flex flex-wrap gap-4">
-                    <button class="bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700"><i class="fas fa-users-cog mr-2"></i>Manage Users</button>
-                    <button class="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700"><i class="fas fa-plus-square mr-2"></i>Add New Course</button>
-                    <button class="bg-yellow-600 text-white px-4 py-2 rounded-lg hover:bg-yellow-700"><i class="fas fa-cogs mr-2"></i>Run System Diagnostics</button>
-                    <button class="bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700"><i class="fas fa-bell mr-2"></i>Send Broadcast Message</button>
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+                <div class="bg-white p-6 rounded-lg shadow-md">
+                    <h2 class="text-xl font-semibold text-gray-800 mb-4">Pending User Approvals</h2>
+                    <ul id="pending-users-list" class="divide-y divide-gray-200">
+                        <li class="py-3 flex items-center justify-between">
+                            <span class="text-gray-700">No pending users.</span>
+                        </li>
+                    </ul>
+                </div>
+                <div class="bg-white p-6 rounded-lg shadow-md">
+                    <h2 class="text-xl font-semibold text-gray-800 mb-4">Recent System Logs</h2>
+                    <ul id="system-logs" class="divide-y divide-gray-200">
+                        <li class="py-3 text-gray-700 text-sm"><span>[2024-05-20 10:30] User 'John Doe' logged in.</span></li>
+                        <li class="py-3 text-gray-700 text-sm"><span>[2024-05-20 09:15] New course 'Advanced Algebra' created.</span></li>
+                        <li class="py-3 text-gray-700 text-sm"><span>[2024-05-19 18:00] Database backup completed.</span></li>
+                        <li class="py-3 text-gray-700 text-sm"><span>[2024-05-19 12:45] System update applied successfully.</span></li>
+                        <li class="py-3 text-gray-700 text-sm"><span>[2024-05-18 14:20] User 'Jane Smith' password reset.</span></li>
+                    </ul>
                 </div>
             </div>
 
             <div class="bg-white p-6 rounded-lg shadow-md">
-                <h2 class="text-2xl font-semibold text-gray-800 mb-4">User Management Overview</h2>
-                <p class="text-gray-700 mb-4">Access full user management functionalities on a dedicated page.</p>
-                <a href="user_management.html" class="bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700 inline-flex items-center">
-                    <i class="fas fa-users mr-2"></i>Go to User Management
-                </a>
-                <div class="mt-6">
-                    <h3 class="font-semibold text-lg text-gray-800 mb-2">Pending Registrations</h3>
-                    <ul class="divide-y divide-gray-200" id="pendingRegistrationsList">
-                        <li class="py-2 text-gray-700 text-sm">Loading pending registrations...</li>
-                    </ul>
+                <h2 class="text-xl font-semibold text-gray-800 mb-4">Quick Access</h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                    <button class="bg-indigo-600 text-white px-4 py-3 rounded-md hover:bg-indigo-700 transition duration-300 flex items-center justify-center space-x-2">
+                        <i class="fas fa-users"></i>
+                        <span>Manage Users</span>
+                    </button>
+                    <button class="bg-green-600 text-white px-4 py-3 rounded-md hover:bg-green-700 transition duration-300 flex items-center justify-center space-x-2">
+                        <i class="fas fa-plus-circle"></i>
+                        <span>Add New Course</span>
+                    </button>
+                    <button class="bg-yellow-600 text-white px-4 py-3 rounded-md hover:bg-yellow-700 transition duration-300 flex items-center justify-center space-x-2">
+                        <i class="fas fa-cogs"></i>
+                        <span>Run System Diagnostics</span>
+                    </button>
+                    <button class="bg-red-600 text-white px-4 py-3 rounded-md hover:bg-red-700 transition duration-300 flex items-center justify-center space-x-2">
+                        <i class="fas fa-bullhorn"></i>
+                        <span>Send Broadcast Message</span>
+                    </button>
                 </div>
             </div>
-        </div>
+        </main>
     </div>
 
-    <div id="logoutModal" class="modal hidden">
-        <div class="bg-white p-6 rounded-lg shadow-xl w-11/12 md:w-1/3 relative">
-            <h2 class="text-2xl font-bold text-gray-800 mb-4">Confirm Logout</h2>
-            <p class="text-gray-700 mb-6">Are you sure you want to log out?</p>
-            <div class="flex justify-end space-x-4">
-                <button id="cancelLogout" class="bg-gray-400 hover:bg-gray-500 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
-                    Cancel
-                </button>
-                <button id="confirmLogout" class="bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
-                    Logout
-                </button>
-            </div>
-        </div>
-    </div>
+    <div id="logout-modal-placeholder"></div>
 
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            document.getElementById('mobile-menu-button').addEventListener('click', function() {
-                const menu = document.getElementById('mobile-menu');
-                menu.classList.toggle('hidden');
-            });
-
-            // --- Local Storage Data Initialization ---
-            // Load allUsers from localStorage, or use a default if none exists
-            let allUsers = JSON.parse(localStorage.getItem('allUsers')) || [
-                { id: 1, name: 'Admin Jane Smith', email: 'jane.smith@edumalawi.com', username: 'janesmithadmin', role: 'Admin', status: 'Active' },
-                { id: 2, name: 'John Doe', email: 'john.doe@example.com', username: 'johndoe', role: 'Student', status: 'Active' },
-                { id: 3, name: 'Mary Phiri', email: 'mary.phiri@example.com', username: 'maryphiri', role: 'Teacher', status: 'Active' },
-                { id: 4, name: 'Peter Gondwe', email: 'peter.g@example.com', username: 'peteg', role: 'Student', status: 'Active' },
-                { id: 5, name: 'Emily Nkosi', email: 'emily.n@example.com', username: 'emilyn', role: 'Student', status: 'Active' },
-                { id: 6, name: 'Frank Kaponda', email: 'frank.k@example.com', username: 'frankk', role: 'Teacher', status: 'Active' },
-                { id: 7, name: 'Grace Chisale', email: 'grace.c@example.com', username: 'gracec', role: 'Student', status: 'Active' },
-                { id: 8, name: 'Henry Banda', email: 'henry.b@example.com', username: 'henryb', role: 'Student', status: 'Active' },
-                { id: 9, name: 'Ivy Manda', email: 'ivy.m@example.com', username: 'ivym', role: 'Student', status: 'Active' },
-                { id: 10, name: 'James Zimba', email: 'james.z@example.com', username: 'jamesz', role: 'Teacher', status: 'Active' },
-            ];
-            // Load pendingUsers from localStorage, or use a default if none exists
-            let pendingUsers = JSON.parse(localStorage.getItem('pendingUsers')) || [
-                { id: 101, name: 'Sarah Mwale', role: 'Student' },
-                { id: 102, name: 'David Banda', role: 'Teacher' }
-            ];
-
-            // Save initial data to localStorage if it's new (i.e., defaults were used)
-            if (!localStorage.getItem('allUsers')) {
-                localStorage.setItem('allUsers', JSON.stringify(allUsers));
-            }
-            if (!localStorage.getItem('pendingUsers')) {
-                localStorage.setItem('pendingUsers', JSON.stringify(pendingUsers));
-            }
-
-            // --- Real-time Notifications Logic ---
-            const notificationBell = document.getElementById('notification-bell');
-            const notificationBadge = document.getElementById('notification-badge');
-            const notificationsDropdown = document.getElementById('notifications-dropdown');
-            const notificationList = document.getElementById('notification-list');
-            const markAllReadBtn = document.getElementById('mark-all-read');
-
-            // Load notifications from localStorage
-            let notifications = JSON.parse(localStorage.getItem('notifications')) || [
-                { id: 1, message: 'Welcome to your Admin Dashboard!', read: false, time: 'just now' }
-            ];
-
-            function updateNotificationsUI() {
-                notificationList.innerHTML = ''; // Clear existing list
-                let unreadCount = 0;
-
-                if (notifications.length === 0) {
-                    notificationList.innerHTML = '<li class="py-2 text-gray-700 text-sm">No new notifications.</li>';
-                } else {
-                    notifications.forEach(notif => {
-                        const li = document.createElement('li');
-                        li.classList.add('py-2', 'text-gray-700', 'text-sm', 'flex', 'justify-between', 'items-center');
-                        if (!notif.read) {
-                            li.classList.add('font-semibold', 'text-gray-900');
-                            unreadCount++;
-                        }
-
-                        li.innerHTML = `
-                            <div>${notif.message} <span class="text-gray-500 text-xs ml-1">${notif.time}</span></div>
-                            <button data-id="${notif.id}" class="mark-as-read text-indigo-500 hover:text-indigo-700 text-xs">${notif.read ? '<i class="fas fa-check-circle"></i>' : '<i class="fas fa-circle"></i>'}</button>
-                        `;
-                        notificationList.appendChild(li);
-                    });
-                }
-
-                if (unreadCount > 0) {
-                    notificationBadge.textContent = unreadCount;
-                    notificationBadge.classList.remove('hidden');
-                } else {
-                    notificationBadge.classList.add('hidden');
-                }
-                localStorage.setItem('notifications', JSON.stringify(notifications)); // Save to localStorage
-            }
-
-            // Initial UI update for notifications
-            updateNotificationsUI();
-
-            // Toggle dropdown
-            notificationBell.addEventListener('click', function(event) {
-                event.stopPropagation(); // Prevent document click from closing immediately
-                notificationsDropdown.classList.toggle('hidden');
-                // Mark all currently displayed as read when opened
-                notifications.forEach(notif => notif.read = true);
-                updateNotificationsUI();
-            });
-
-            // Mark individual notification as read
-            notificationList.addEventListener('click', function(event) {
-                if (event.target.classList.contains('mark-as-read') || event.target.closest('.mark-as-read')) {
-                    const button = event.target.closest('.mark-as-read');
-                    const notifId = parseInt(button.dataset.id);
-                    const notifIndex = notifications.findIndex(n => n.id === notifId);
-                    if (notifIndex !== -1) {
-                        notifications[notifIndex].read = true;
-                        updateNotificationsUI();
-                    }
-                }
-            });
-
-            // Mark all notifications as read button
-            markAllReadBtn.addEventListener('click', function() {
-                notifications.forEach(notif => notif.read = true);
-                updateNotificationsUI();
-                notificationsDropdown.classList.add('hidden'); // Close dropdown after marking all as read
-            });
-
-            // Close dropdown when clicking outside
-            window.addEventListener('click', function(event) {
-                if (!notificationBell.contains(event.target) && !notificationsDropdown.contains(event.target)) {
-                    notificationsDropdown.classList.add('hidden');
-                }
-            });
-
-            // Function to add a new notification
-            function addNewNotification(message) {
-                const newId = notifications.length > 0 ? Math.max(...notifications.map(n => n.id)) + 1 : 1;
-                notifications.unshift({ id: newId, message: message, read: false, time: 'just now' });
-                updateNotificationsUI();
-                if (notificationsDropdown.classList.contains('hidden')) {
-                    notificationBadge.classList.remove('hidden');
-                    notificationBadge.textContent = parseInt(notificationBadge.textContent || 0) + 1;
-                }
-            }
-            // Simulate a new admin notification after 15 seconds
-            setTimeout(() => {
-                addNewNotification('Critical system alert: Disk space low on server A.');
-            }, 15000);
-
-            // --- Logout Modal Logic ---
-            const logoutButtons = document.querySelectorAll('.logout-btn');
-            const logoutModal = document.getElementById('logoutModal');
-            const confirmLogoutBtn = document.getElementById('confirmLogout');
-            const cancelLogoutBtn = document.getElementById('cancelLogout');
-
-            logoutButtons.forEach(button => {
-                button.addEventListener('click', function() {
-                    logoutModal.classList.remove('hidden');
-                });
-            });
-
-            confirmLogoutBtn.addEventListener('click', function() {
-                console.log('Logging out...');
-                alert('You have been logged out!');
-                logoutModal.classList.add('hidden');
-                // Clear localStorage relevant to session to simulate full logout
-                localStorage.removeItem('allUsers'); // Clear user data
-                localStorage.removeItem('pendingUsers'); // Clear pending users
-                localStorage.removeItem('notifications'); // Clear notifications
-                localStorage.removeItem('courses'); // Clear courses (if you add them to LS)
-                window.location.href = 'index.html'; // Redirect to landing page (or login page)
-            });
-
-            cancelLogoutBtn.addEventListener('click', function() {
-                logoutModal.classList.add('hidden');
-            });
-
-            logoutModal.addEventListener('click', function(event) {
-                if (event.target === logoutModal) {
-                    logoutModal.classList.add('hidden');
-                }
-            });
-
-            // --- Admin Dashboard Specific Logic ---
-            const totalUsersSpan = document.querySelector('.bg-blue-50 .text-3xl');
-            const pendingRegistrationsList = document.getElementById('pendingRegistrationsList');
-            const pendingIssuesCountSpan = document.querySelector('.bg-yellow-50 .text-3xl'); // To update pending issues
-
-            function updateAdminDashboardUI() {
-                // Update Total Users
-                totalUsersSpan.textContent = allUsers.length;
-
-                // Update Pending Registrations list
-                pendingRegistrationsList.innerHTML = ''; // Clear existing rows
-                if (pendingUsers.length === 0) {
-                    pendingRegistrationsList.innerHTML = '<li class="py-2 text-gray-700 text-sm">No pending registrations.</li>';
-                } else {
-                    pendingUsers.forEach(user => {
-                        const li = document.createElement('li');
-                        li.classList.add('py-2', 'flex', 'justify-between', 'items-center');
-                        li.innerHTML = `
-                            <span>${user.name} (${user.role})</span>
-                            <div class="space-x-2">
-                                <button data-id="${user.id}" class="approve-user text-green-600 hover:text-green-800"><i class="fas fa-check"></i> Approve</button>
-                                <button data-id="${user.id}" class="reject-user text-red-600 hover:text-red-800"><i class="fas fa-times"></i> Reject</button>
-                            </div>
-                        `;
-                        pendingRegistrationsList.appendChild(li);
-                    });
-                }
-                // Update Pending Issues count on dashboard to reflect current pending users
-                pendingIssuesCountSpan.textContent = pendingUsers.length;
-                localStorage.setItem('pendingUsers', JSON.stringify(pendingUsers)); // Ensure pending users are saved after each UI update
-            }
-
-            // Event listener for Approve/Reject buttons on the dashboard
-            pendingRegistrationsList.addEventListener('click', function(event) {
-                const target = event.target.closest('button');
-                if (!target) return; // Not a button
-
-                const userId = parseInt(target.dataset.id);
-                const userIndex = pendingUsers.findIndex(user => user.id === userId);
-
-                if (userIndex !== -1) {
-                    const user = pendingUsers[userIndex];
-                    if (target.classList.contains('approve-user')) {
-                        console.log(`Approving user: ${user.name}`);
-                        // Add approved user to allUsers list
-                        const newApprovedUser = {
-                            id: allUsers.length > 0 ? Math.max(...allUsers.map(u => u.id)) + 1 : 1, // Ensure unique ID
-                            name: user.name,
-                            email: `${user.name.toLowerCase().replace(/ /g, '.')}.approved@example.com`, // Placeholder email
-                            username: user.name.toLowerCase().replace(/ /g, ''), // Simple username for demo
-                            role: user.role,
-                            status: 'Active'
-                        };
-                        allUsers.push(newApprovedUser);
-                        localStorage.setItem('allUsers', JSON.stringify(allUsers)); // Save updated allUsers
-                        addNewNotification(`User "${user.name}" approved.`);
-                    } else if (target.classList.contains('reject-user')) {
-                        console.log(`Rejecting user: ${user.name}`);
-                        addNewNotification(`User "${user.name}" rejected.`);
-                    }
-                    // Remove user from pending list
-                    pendingUsers.splice(userIndex, 1);
-                    localStorage.setItem('pendingUsers', JSON.stringify(pendingUsers)); // Save updated pendingUsers
-                    updateAdminDashboardUI(); // Re-render the pending list and dashboard stats
-                }
-            });
-
-            // Initial render of dashboard UI
-            updateAdminDashboardUI();
-
-            // Quick Access Buttons functionality
-            document.querySelector('.bg-yellow-50 button:nth-child(1)').addEventListener('click', function() {
-                window.location.href = 'user_management.html'; // Go to User Management page
-            });
-            document.querySelector('.bg-green-50 button:nth-child(1)').addEventListener('click', function() {
-                alert('Simulating: Open Add New Course interface');
-            });
-            document.querySelector('.bg-yellow-600').addEventListener('click', function() { // Adjusted selector for Run System Diagnostics
-                alert('Simulating: Running system diagnostics...');
-                addNewNotification('System check initiated.');
-            });
-             document.querySelector('.bg-red-600').addEventListener('click', function() { // Adjusted selector for Send Broadcast Message
-                alert('Simulating: Opening broadcast message composer');
-                addNewNotification('Broadcast message composer opened.');
-            });
-
-        });
-    </script>
+    <script src="js/main.js"></script>
+    <script src="js/notifications.js"></script>
+    <script src="js/admin-dashboard.js"></script>
 </body>
 </html>
