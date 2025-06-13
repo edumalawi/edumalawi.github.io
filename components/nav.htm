@@ -1,0 +1,46 @@
+<nav class="gradient-bg text-white shadow-lg">
+    <div class="container mx-auto px-4 py-3 flex justify-between items-center">
+        <div class="flex items-center space-x-2">
+            <i class="fas fa-book-open text-2xl"></i>
+            <span class="text-xl font-bold">EduMalawi</span>
+        </div>
+        <div class="hidden md:flex items-center space-x-4">
+            <a href="admin-dashboard.html" class="hover:text-gray-200 font-bold">Dashboard</a>
+            <a href="user_management.html" class="hover:text-gray-200">Users</a>
+            <a href="#" class="hover:text-gray-200">Courses</a>
+            <a href="#" class="hover:text-gray-200">Settings</a>
+            <button class="bg-red-600 text-white px-4 py-2 rounded-full hover:bg-red-700 transition duration-300 logout-btn">Logout</button>
+        </div>
+
+        <div class="relative ml-4">
+            <button id="notification-bell" class="relative p-2 rounded-full hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                <i class="fas fa-bell text-white text-xl"></i>
+                <span id="notification-badge" class="absolute top-0 right-0 inline-flex items-center justify-center px-2 py-1 text-xs font-bold leading-none text-red-100 transform translate-x-1/2 -translate-y-1/2 bg-red-600 rounded-full hidden">0</span>
+            </button>
+
+            <div id="notifications-dropdown" class="absolute right-0 mt-2 w-80 bg-white border border-gray-200 rounded-lg shadow-lg z-50 hidden">
+                <div class="p-4">
+                    <h3 class="font-semibold text-gray-800 border-b pb-2 mb-2">Notifications</h3>
+                    <ul id="notification-list" class="divide-y divide-gray-200">
+                        <li class="py-2 text-gray-700 text-sm">No new notifications.</li>
+                    </ul>
+                    <div class="text-right mt-2">
+                        <button id="mark-all-read" class="text-indigo-600 hover:text-indigo-800 text-xs font-medium">Mark all as read</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="md:hidden">
+            <button id="mobile-menu-button" class="text-white text-2xl focus:outline-none">
+                <i class="fas fa-bars"></i>
+            </button>
+        </div>
+    </div>
+    <div id="mobile-menu" class="hidden md:hidden bg-indigo-700">
+        <a href="index.html" class="block px-4 py-2 text-sm text-white hover:bg-indigo-800">Dashboard</a>
+        <a href="user_management.html" class="block px-4 py-2 text-sm text-white hover:bg-indigo-800">Users</a>
+        <a href="#" class="block px-4 py-2 text-sm text-white hover:bg-indigo-800">Courses</a>
+        <a href="#" class="block px-4 py-2 text-sm text-white hover:bg-indigo-800">Settings</a>
+        <button class="block w-full text-left px-4 py-2 text-sm text-white hover:bg-indigo-800 logout-btn">Logout</button>
+    </div>
+</nav>
