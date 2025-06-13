@@ -6,298 +6,158 @@
     <title>EduMalawi - Headmaster Dashboard</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <style>
-        .gradient-bg { background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%); }
-        .sidebar { transition: all 0.3s ease; }
+    <link rel="stylesheet" href="css/style.css"> <style>
+        /* Any page-specific styles can remain here or be moved to style.css if global */
         .modal {
             position: fixed; inset: 0; background: rgba(0, 0, 0, 0.5);
             display: flex; align-items: center; justify-content: center; z-index: 50; overflow-y: auto;
         }
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+        .pulse {
+            animation: pulse 1.5s infinite;
+        }
     </style>
 </head>
-<body class="bg-gray-50 font-sans">
-    <nav class="gradient-bg text-white shadow-lg">
-        <div class="container mx-auto px-4 py-3 flex justify-between items-center">
-            <div class="flex items-center space-x-2">
-                <i class="fas fa-book-open text-2xl"></i>
-                <span class="text-xl font-bold">EduMalawi</span>
-            </div>
-            <div class="hidden md:flex items-center space-x-4">
-                <a href="#" class="hover:text-gray-200">Dashboard</a>
-                <a href="#" class="hover:text-gray-200">Staff</a>
-                <a href="#" class="hover:text-gray-200">Students</a>
-                <a href="#" class="hover:text-gray-200">Finance</a>
-                <button class="bg-red-600 text-white px-4 py-2 rounded-full hover:bg-red-700 transition duration-300">Logout</button>
-            </div>
+<body class="bg-gray-50 font-sans flex">
+    <div id="navbar-placeholder"></div>
 
-            <div class="relative ml-4">
-                <button id="notification-bell" class="relative p-2 rounded-full hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
-                    <i class="fas fa-bell text-white text-xl"></i>
-                    <span id="notification-badge" class="absolute top-0 right-0 inline-flex items-center justify-center px-2 py-1 text-xs font-bold leading-none text-red-100 transform translate-x-1/2 -translate-y-1/2 bg-red-600 rounded-full hidden">0</span>
-                </button>
-
-                <div id="notifications-dropdown" class="absolute right-0 mt-2 w-80 bg-white border border-gray-200 rounded-lg shadow-lg z-50 hidden">
-                    <div class="p-4">
-                        <h3 class="font-semibold text-gray-800 border-b pb-2 mb-2">Notifications</h3>
-                        <ul id="notification-list" class="divide-y divide-gray-200">
-                            <li class="py-2 text-gray-700 text-sm">No new notifications.</li>
-                        </ul>
-                        <div class="text-right mt-2">
-                            <button id="mark-all-read" class="text-indigo-600 hover:text-indigo-800 text-xs font-medium">Mark all as read</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="md:hidden">
-                <button id="mobile-menu-button" class="text-white text-2xl focus:outline-none">
-                    <i class="fas fa-bars"></i>
-                </button>
-            </div>
-        </div>
-        <div id="mobile-menu" class="hidden md:hidden bg-indigo-700">
-            <a href="#" class="block px-4 py-2 text-sm text-white hover:bg-indigo-800">Dashboard</a>
-            <a href="#" class="block px-4 py-2 text-sm text-white hover:bg-indigo-800">Staff</a>
-            <a href="#" class="block px-4 py-2 text-sm text-white hover:bg-indigo-800">Students</a>
-            <a href="#" class="block px-4 py-2 text-sm text-white hover:bg-indigo-800">Finance</a>
-            <button class="block w-full text-left px-4 py-2 text-sm text-white hover:bg-indigo-800">Logout</button>
-        </div>
-    </nav>
-
-    <div class="flex">
+    <div class="flex flex-1">
         <aside class="w-64 bg-gray-800 text-white min-h-screen p-6 hidden md:block">
-            <h2 class="text-2xl font-bold mb-6">Headmaster Panel</h2>
+            <h2 class="text-2xl font-bold mb-6">Headmaster Portal</h2>
             <nav>
                 <ul>
                     <li class="mb-4">
-                        <a href="#" class="flex items-center text-gray-300 hover:text-white transition duration-200">
-                            <i class="fas fa-tachometer-alt mr-3"></i> Dashboard
+                        <a href="headmaster-dashboard.html" class="flex items-center text-gray-300 hover:text-white">
+                            <i class="fas fa-school mr-3"></i>
+                            <span>Overview</span>
                         </a>
                     </li>
                     <li class="mb-4">
-                        <a href="#" class="flex items-center text-gray-300 hover:text-white transition duration-200">
-                            <i class="fas fa-user-tie mr-3"></i> Staff Management
+                        <a href="user_management.html" class="flex items-center text-gray-300 hover:text-white">
+                            <i class="fas fa-users mr-3"></i>
+                            <span>Staff & Student Mgmt</span>
                         </a>
                     </li>
                     <li class="mb-4">
-                        <a href="#" class="flex items-center text-gray-300 hover:text-white transition duration-200">
-                            <i class="fas fa-user-graduate mr-3"></i> Student Records
+                        <a href="#" class="flex items-center text-gray-300 hover:text-white">
+                            <i class="fas fa-chalkboard-teacher mr-3"></i>
+                            <span>Teacher Performance</span>
                         </a>
                     </li>
                     <li class="mb-4">
-                        <a href="#" class="flex items-center text-gray-300 hover:text-white transition duration-200">
-                            <i class="fas fa-money-check-alt mr-3"></i> Financial Oversight
+                        <a href="#" class="flex items-center text-gray-300 hover:text-white">
+                            <i class="fas fa-chart-line mr-3"></i>
+                            <span>Academic Analytics</span>
                         </a>
                     </li>
                     <li class="mb-4">
-                        <a href="#" class="flex items-center text-gray-300 hover:text-white transition duration-200">
-                            <i class="fas fa-calendar-alt mr-3"></i> School Calendar
+                        <a href="#" class="flex items-center text-gray-300 hover:text-white">
+                            <i class="fas fa-money-bill-wave mr-3"></i>
+                            <span>Financial Overview</span>
+                        </a>
+                    </li>
+                    <li class="mb-4">
+                        <a href="#" class="flex items-center text-gray-300 hover:text-white">
+                            <i class="fas fa-cogs mr-3"></i>
+                            <span>School Settings</span>
                         </a>
                     </li>
                 </ul>
             </nav>
         </aside>
 
-        <div class="flex-1 p-8">
+        <main class="flex-1 p-6">
             <h1 class="text-3xl font-bold text-gray-800 mb-6">Headmaster Dashboard</h1>
 
-            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
-                <div class="bg-white p-6 rounded-lg shadow-md col-span-2">
-                    <h2 class="text-2xl font-semibold text-gray-800 mb-4">Overview Statistics</h2>
-                    <div class="grid grid-cols-1 md:grid-cols-4 gap-4 text-center">
-                        <div class="bg-blue-50 p-4 rounded-lg">
-                            <p class="text-sm text-blue-700">Total Students</p>
-                            <p class="text-3xl font-bold text-blue-900">500</p>
-                        </div>
-                        <div class="bg-green-50 p-4 rounded-lg">
-                            <p class="text-sm text-green-700">Total Teachers</p>
-                            <p class="text-3xl font-bold text-green-900">25</p>
-                        </div>
-                        <div class="bg-yellow-50 p-4 rounded-lg">
-                            <p class="text-sm text-yellow-700">Attendance Rate</p>
-                            <p class="text-3xl font-bold text-yellow-900">92%</p>
-                        </div>
-                        <div class="bg-indigo-50 p-4 rounded-lg">
-                            <p class="text-sm text-indigo-700">Upcoming Events</p>
-                            <p class="text-3xl font-bold text-indigo-900">3</p>
-                        </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+                <div class="bg-white p-6 rounded-lg shadow-md flex items-center justify-between">
+                    <div>
+                        <h3 class="text-gray-500 text-sm font-medium">Total Students</h3>
+                        <p id="total-students" class="text-3xl font-semibold text-gray-900">750</p>
                     </div>
+                    <i class="fas fa-user-graduate text-4xl text-indigo-500"></i>
                 </div>
+                <div class="bg-white p-6 rounded-lg shadow-md flex items-center justify-between">
+                    <div>
+                        <h3 class="text-gray-500 text-sm font-medium">Total Staff</h3>
+                        <p id="total-staff" class="text-3xl font-semibold text-gray-900">45</p>
+                    </div>
+                    <i class="fas fa-users text-4xl text-green-500"></i>
+                </div>
+                <div class="bg-white p-6 rounded-lg shadow-md flex items-center justify-between">
+                    <div>
+                        <h3 class="text-gray-500 text-sm font-medium">Active Courses</h3>
+                        <p id="active-courses" class="text-3xl font-semibold text-gray-900">28</p>
+                    </div>
+                    <i class="fas fa-book-open text-4xl text-yellow-500"></i>
+                </div>
+                <div class="bg-white p-6 rounded-lg shadow-md flex items-center justify-between">
+                    <div>
+                        <h3 class="text-gray-500 text-sm font-medium">School Health</h3>
+                        <p id="school-health" class="text-3xl font-semibold text-gray-900">Excellent</p>
+                    </div>
+                    <i class="fas fa-heartbeat text-4xl text-red-500"></i>
+                </div>
+            </div>
 
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
                 <div class="bg-white p-6 rounded-lg shadow-md">
-                    <h2 class="text-2xl font-semibold text-gray-800 mb-4">Action Items</h2>
-                    <ul class="list-disc list-inside text-gray-700">
-                        <li class="mb-2">Review Q2 Financial Report. <span class="text-gray-500 text-sm">Due Jun 30</span></li>
-                        <li class="mb-2">Approve new curriculum proposals. <span class="text-gray-500 text-sm">2 pending</span></li>
-                        <li class="mb-2">Respond to parent inquiries. <span class="text-gray-500 text-sm">4 new</span></li>
-                        <li>Prepare for school board meeting. <span class="text-gray-500 text-sm">Jul 15</span></li>
+                    <h2 class="text-xl font-semibold text-gray-800 mb-4">School Announcements</h2>
+                    <ul class="divide-y divide-gray-200">
+                        <li class="py-3 flex items-center justify-between">
+                            <span class="text-gray-700 font-medium">Urgent: Board meeting rescheduled to Friday.</span>
+                            <span class="text-gray-500 text-sm">2 hours ago</span>
+                        </li>
+                        <li class="py-3 flex items-center justify-between">
+                            <span class="text-gray-700">New curriculum updates for next term released.</span>
+                            <span class="text-gray-500 text-sm">Yesterday</span>
+                        </li>
+                        <li class="py-3 flex items-center justify-between">
+                            <span class="text-gray-700">School event: Annual Sports Day on June 30th.</span>
+                            <span class="text-gray-500 text-sm">3 days ago</span>
+                        </li>
+                    </ul>
+                </div>
+                <div class="bg-white p-6 rounded-lg shadow-md">
+                    <h2 class="text-xl font-semibold text-gray-800 mb-4">Recent Enrollments</h2>
+                    <ul class="divide-y divide-gray-200">
+                        <li class="py-3 text-gray-700 text-sm"><span>Mercy Phiri (Grade 9) enrolled.</span></li>
+                        <li class="py-3 text-gray-700 text-sm"><span>Chifundo Tembo (Grade 7) enrolled.</span></li>
+                        <li class="py-3 text-gray-700 text-sm"><span>Tadala Zulu (Grade 11) enrolled.</span></li>
                     </ul>
                 </div>
             </div>
 
-            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                <div class="bg-white p-6 rounded-lg shadow-md">
-                    <h2 class="text-2xl font-semibold text-gray-800 mb-4">Staff Performance Overview</h2>
-                    <p class="text-gray-700 mb-4">Monitor teacher performance and development needs.</p>
-                    <div class="flex items-center justify-between mb-2">
-                        <span class="text-gray-700">Teacher A:</span>
-                        <div class="w-2/3 bg-gray-200 rounded-full h-2.5">
-                            <div class="bg-green-600 h-2.5 rounded-full" style="width: 90%;"></div>
-                        </div>
-                        <span class="text-gray-700 text-sm">90%</span>
-                    </div>
-                    <div class="flex items-center justify-between mb-2">
-                        <span class="text-gray-700">Teacher B:</span>
-                        <div class="w-2/3 bg-gray-200 rounded-full h-2.5">
-                            <div class="bg-yellow-500 h-2.5 rounded-full" style="width: 75%;"></div>
-                        </div>
-                        <span class="text-gray-700 text-sm">75%</span>
-                    </div>
-                    <div class="flex items-center justify-between">
-                        <span class="text-gray-700">Teacher C:</span>
-                        <div class="w-2/3 bg-gray-200 rounded-full h-2.5">
-                            <div class="bg-red-600 h-2.5 rounded-full" style="width: 60%;"></div>
-                        </div>
-                        <span class="text-gray-700 text-sm">60%</span>
-                    </div>
-                    <button class="mt-6 bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700"><i class="fas fa-chart-bar mr-2"></i>View Full Report</button>
-                </div>
-
-                <div class="grid grid-cols-1 gap-6">
-                    <div class="bg-white p-6 rounded-lg shadow-md">
-                        <h2 class="text-2xl font-semibold text-gray-800 mb-4">Upcoming Events</h2>
-                        <ul class="list-disc list-inside text-gray-700">
-                            <li class="mb-2">School Assembly - Jun 15 <span class="text-gray-500 text-sm">(Main Hall)</span></li>
-                            <li class="mb-2">Teacher Training Workshop - Jun 22 <span class="text-gray-500 text-sm">(Online)</span></li>
-                            <li>Annual Sports Day - Jul 10 <span class="text-gray-500 text-sm">(School Field)</span></li>
-                        </ul>
-                    </div>
-                    <div class="bg-blue-50 border-l-4 border-blue-500 text-blue-800 p-4 rounded-lg">
-                        <h3 class="font-semibold text-lg">Announcements:</h3>
-                        <ul class="list-disc list-inside mt-2">
-                            <li>New student enrollment period opens next week.</li>
-                            <li>Reminder: All staff meetings moved to Thursday.</li>
-                        </ul>
-                    </div>
-                    <div class="bg-yellow-50 border-l-4 border-yellow-500 text-yellow-800 p-4 rounded-lg">
-                        <h3 class="font-semibold text-lg">Quick Access:</h3>
-                        <div class="grid grid-cols-2 gap-3 mt-3">
-                            <button class="bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700 text-sm"><i class="fas fa-bell mr-2"></i>Send Announcement</button>
-                            <button class="bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700 text-sm"><i class="fas fa-clipboard-list mr-2"></i>Generate Report</button>
-                        </div>
-                    </div>
+            <div class="bg-white p-6 rounded-lg shadow-md">
+                <h2 class="text-xl font-semibold text-gray-800 mb-4">Quick Access</h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                    <button class="bg-indigo-600 text-white px-4 py-3 rounded-md hover:bg-indigo-700 transition duration-300 flex items-center justify-center space-x-2">
+                        <i class="fas fa-users"></i>
+                        <span>Manage Users</span>
+                    </button>
+                    <button class="bg-green-600 text-white px-4 py-3 rounded-md hover:bg-green-700 transition duration-300 flex items-center justify-center space-x-2">
+                        <i class="fas fa-plus-circle"></i>
+                        <span>Register New Student</span>
+                    </button>
+                    <button class="bg-yellow-600 text-white px-4 py-3 rounded-md hover:bg-yellow-700 transition duration-300 flex items-center justify-center space-x-2">
+                        <i class="fas fa-chart-pie"></i>
+                        <span>View Analytics</span>
+                    </button>
+                    <button class="bg-red-600 text-white px-4 py-3 rounded-md hover:bg-red-700 transition duration-300 flex items-center justify-center space-x-2">
+                        <i class="fas fa-bullhorn"></i>
+                        <span>Send School-wide Alert</span>
+                    </button>
                 </div>
             </div>
-            </div>
+        </main>
     </div>
 
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            document.getElementById('mobile-menu-button').addEventListener('click', function() {
-                const menu = document.getElementById('mobile-menu');
-                menu.classList.toggle('hidden');
-            });
-            // Placeholder for future headmaster-specific JS
+    <div id="logout-modal-placeholder"></div>
 
-            // --- Real-time Notifications Logic START ---
-            const notificationBell = document.getElementById('notification-bell');
-            const notificationBadge = document.getElementById('notification-badge');
-            const notificationsDropdown = document.getElementById('notifications-dropdown');
-            const notificationList = document.getElementById('notification-list');
-            const markAllReadBtn = document.getElementById('mark-all-read');
-
-            let notifications = [
-                { id: 1, message: 'New curriculum proposal submitted for review: Grade 7 Science.', read: false, time: '1 hour ago' },
-                { id: 2, message: 'Urgent: Teacher attendance report for May is overdue.', read: false, time: '2 hours ago' },
-                { id: 3, message: 'Parent inquiry received: Mary Banda - fees payment.', read: true, time: 'yesterday' }
-            ];
-
-            function updateNotificationsUI() {
-                notificationList.innerHTML = ''; // Clear existing list
-                let unreadCount = 0;
-
-                if (notifications.length === 0) {
-                    notificationList.innerHTML = '<li class="py-2 text-gray-700 text-sm">No new notifications.</li>';
-                } else {
-                    notifications.forEach(notif => {
-                        const li = document.createElement('li');
-                        li.classList.add('py-2', 'text-gray-700', 'text-sm', 'flex', 'justify-between', 'items-center');
-                        if (!notif.read) {
-                            li.classList.add('font-semibold', 'text-gray-900');
-                            unreadCount++;
-                        }
-
-                        li.innerHTML = `
-                            <div>${notif.message} <span class="text-gray-500 text-xs ml-1">${notif.time}</span></div>
-                            <button data-id="${notif.id}" class="mark-as-read text-indigo-500 hover:text-indigo-700 text-xs">${notif.read ? '<i class="fas fa-check-circle"></i>' : '<i class="fas fa-circle"></i>'}</button>
-                        `;
-                        notificationList.appendChild(li);
-                    });
-                }
-
-                if (unreadCount > 0) {
-                    notificationBadge.textContent = unreadCount;
-                    notificationBadge.classList.remove('hidden');
-                } else {
-                    notificationBadge.classList.add('hidden');
-                }
-            }
-
-            // Initial UI update
-            updateNotificationsUI();
-
-            // Toggle dropdown
-            notificationBell.addEventListener('click', function(event) {
-                event.stopPropagation(); // Prevent document click from closing immediately
-                notificationsDropdown.classList.toggle('hidden');
-                // Mark all currently displayed as read when opened
-                notifications.forEach(notif => notif.read = true);
-                updateNotificationsUI();
-            });
-
-            // Mark individual notification as read
-            notificationList.addEventListener('click', function(event) {
-                if (event.target.classList.contains('mark-as-read') || event.target.closest('.mark-as-read')) {
-                    const button = event.target.closest('.mark-as-read');
-                    const notifId = parseInt(button.dataset.id);
-                    const notifIndex = notifications.findIndex(n => n.id === notifId);
-                    if (notifIndex !== -1) {
-                        notifications[notifIndex].read = true;
-                        updateNotificationsUI();
-                    }
-                }
-            });
-
-            // Mark all notifications as read button
-            markAllReadBtn.addEventListener('click', function() {
-                notifications.forEach(notif => notif.read = true);
-                updateNotificationsUI();
-                notificationsDropdown.classList.add('hidden'); // Close dropdown after marking all as read
-            });
-
-            // Close dropdown when clicking outside
-            window.addEventListener('click', function(event) {
-                if (!notificationBell.contains(event.target) && !notificationsDropdown.contains(event.target)) {
-                    notificationsDropdown.classList.add('hidden');
-                }
-            });
-
-            // Example of adding a new notification (simulate a real-time event for headmaster)
-            function addNewNotification(message) {
-                const newId = notifications.length > 0 ? Math.max(...notifications.map(n => n.id)) + 1 : 1;
-                notifications.unshift({ id: newId, message: message, read: false, time: 'just now' });
-                updateNotificationsUI();
-                if (notificationsDropdown.classList.contains('hidden')) {
-                    notificationBadge.classList.remove('hidden');
-                    notificationBadge.textContent = parseInt(notificationBadge.textContent) + 1;
-                }
-            }
-
-            // Simulate a new headmaster notification after 15 seconds
-            setTimeout(() => {
-                addNewNotification('Urgent: Board meeting rescheduled to Friday, June 14th.');
-            }, 15000);
-            // --- Real-time Notifications Logic END ---
-        });
-    </script>
-</body>
+    <script src="js/main.js"></script>
+    <script src="js/notifications.js"></script>
+    </body>
 </html>
