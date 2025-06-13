@@ -1,0 +1,46 @@
+<nav class="gradient-bg text-white shadow-lg">
+    <div class="container mx-auto px-4 py-3 flex justify-between items-center">
+        <div class="flex items-center space-x-2">
+            <i class="fas fa-book-open text-2xl"></i>
+            <span class="text-xl font-bold">EduMalawi</span>
+        </div>
+
+        <div class="hidden md:flex flex-grow justify-center">
+            </div>
+
+        <div class="flex items-center space-x-4">
+            <div class="flex items-center space-x-2">
+                <img src="https://via.placeholder.com/40" alt="User Avatar" class="w-10 h-10 rounded-full border-2 border-white">
+                <div>
+                    <span id="nav-username" class="font-semibold text-lg">Loading...</span>
+                    <span id="nav-role" class="block text-sm text-gray-200 capitalize">Loading...</span>
+                </div>
+            </div>
+
+            <div class="relative">
+                <button id="notification-bell" class="relative p-2 rounded-full hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-white">
+                    <i class="fas fa-bell text-xl"></i>
+                    <span id="notification-badge" class="absolute top-0 right-0 inline-flex items-center justify-center px-2 py-1 text-xs font-bold leading-none text-red-100 bg-red-600 rounded-full hidden">0</span>
+                </button>
+
+                <div id="notifications-dropdown" class="hidden absolute right-0 mt-2 w-80 bg-white rounded-md shadow-lg py-1 z-20 text-gray-700">
+                    <div class="flex justify-between items-center px-4 py-2 border-b border-gray-200">
+                        <h3 class="font-semibold text-gray-800">Notifications</h3>
+                        <button id="mark-all-read-btn" class="text-sm text-blue-600 hover:underline">Mark All Read</button>
+                    </div>
+                    <ul id="notifications-list" class="max-h-60 overflow-y-auto custom-scrollbar">
+                        <li class="p-3 text-gray-500">No new notifications.</li>
+                    </ul>
+                    <div class="p-2 border-t border-gray-200 text-center">
+                        <a href="#" class="text-sm text-indigo-600 hover:underline">View All Notifications</a>
+                    </div>
+                </div>
+            </div>
+
+            <button id="logout-button" class="flex items-center space-x-2 bg-indigo-700 hover:bg-indigo-800 px-4 py-2 rounded-md transition duration-300">
+                <i class="fas fa-sign-out-alt"></i>
+                <span>Logout</span>
+            </button>
+        </div>
+    </div>
+</nav>
