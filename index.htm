@@ -6,508 +6,109 @@
     <title>EduMalawi - Unified Platform</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <style>
+    <link rel="stylesheet" href="css/style.css"> <style>
         /* Custom CSS for features Tailwind doesn't cover easily */
         .gradient-bg {
             background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
         }
-        .sidebar {
-            transition: all 0.3s ease;
-        }
-        .assignment-card:hover, .portal-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
-        }
-        .progress-ring__circle {
-            transition: stroke-dashoffset 0.35s;
-            transform: rotate(-90deg);
-            transform-origin: 50% 50%;
-        }
-        @keyframes pulse {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.5; }
-        }
-        .pulse {
-            animation: pulse 1.5s infinite;
-        }
-        /* Modals are hidden by default */
         .modal {
-            position: fixed;
-            inset: 0;
-            background: rgba(0, 0, 0, 0.5);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            z-index: 50;
-            overflow-y: auto;
+            position: fixed; inset: 0; background: rgba(0, 0, 0, 0.5);
+            display: flex; align-items: center; justify-content: center; z-index: 50; overflow-y: auto;
         }
-        /* Custom styles for the new login/signup modal background */
-        .modal-overlay {
-            background: rgba(0, 0, 0, 0.6);
-            display: flex;
-            align-items: center;
-            justify-content: center;
+        /* Style for message box */
+        .message-box {
             position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: 999; /* Ensure it's on top of everything */
+            top: 20px;
+            right: 20px;
+            padding: 15px 25px;
+            border-radius: 8px;
+            font-weight: bold;
+            color: white;
+            z-index: 1000;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            opacity: 0;
+            transform: translateY(-20px);
+            transition: opacity 0.3s ease-out, transform 0.3s ease-out;
         }
+        .message-box.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        .message-box.success { background-color: #28a745; }
+        .message-box.error { background-color: #dc3545; }
+        .message-box.info { background-color: #007bff; }
     </style>
 </head>
-<body class="bg-gray-50 font-sans">
-    <nav class="gradient-bg text-white shadow-lg">
-        <div class="container mx-auto px-4 py-3 flex justify-between items-center">
-            <div class="flex items-center space-x-2">
-                <i class="fas fa-book-open text-2xl"></i>
-                <span class="text-xl font-bold">EduMalawi</span>
-            </div>
-            <div class="hidden md:flex items-center space-x-4">
-                <a href="#about" class="hover:text-gray-200">About</a>
-                <a href="#features" class="hover:text-gray-200">Features</a>
-                <a href="#contact" class="hover:text-gray-200">Contact</a>
-                <button id="login-button" class="bg-white text-indigo-600 px-4 py-2 rounded-full hover:bg-gray-100 transition duration-300">Login</button>
-            </div>
-
-            <div class="md:hidden">
-                <button id="mobile-menu-button" class="text-white text-2xl focus:outline-none">
-                    <i class="fas fa-bars"></i>
-                </button>
-            </div>
-        </div>
-        <div id="mobile-menu" class="hidden md:hidden bg-indigo-700">
-            <a href="#about" class="block px-4 py-2 text-sm text-white hover:bg-indigo-800">About</a>
-            <a href="#features" class="block px-4 py-2 text-sm text-white hover:bg-indigo-800">Features</a>
-            <a href="#contact" class="block px-4 py-2 text-sm text-white hover:bg-indigo-800">Contact</a>
-            <button class="block w-full text-left px-4 py-2 text-sm text-white hover:bg-indigo-800" id="mobile-login-button">Login</button>
-        </div>
-    </nav>
-
-    <main class="container mx-auto px-4 py-8">
-        <section class="text-center mb-12">
-            <h1 class="text-4xl md:text-5xl font-bold text-gray-800 mb-4">Empowering Education in Malawi</h1>
-            <p class="text-lg text-gray-600 mb-8">A unified platform for students, teachers, parents, and administrators.</p>
-            <div class="space-x-4">
-                <a href="#" class="bg-indigo-600 text-white px-6 py-3 rounded-full text-lg hover:bg-indigo-700 transition duration-300">Get Started</a>
-                <a href="#features" class="text-indigo-600 border border-indigo-600 px-6 py-3 rounded-full text-lg hover:bg-indigo-50 transition duration-300">Learn More</a>
-            </div>
-        </section>
-
-        <!-- Login/Sign Up Modal Container - Integrated from login-signup-form -->
-        <div id="auth-modal" class="modal-overlay hidden">
-            <div class="bg-white p-8 rounded-xl shadow-2xl w-full max-w-md mx-4">
-                <div class="flex justify-between items-center mb-6">
-                    <h2 id="auth-title" class="text-3xl font-extrabold text-gray-800">Login</h2>
-                    <button id="close-modal-btn" class="text-gray-400 hover:text-gray-600 focus:outline-none">
-                        <i class="fas fa-times text-2xl"></i>
-                    </button>
-                </div>
-
-                <!-- Tab Navigation for Login/Sign Up -->
-                <div id="tab-navigation" class="flex mb-6 border-b border-gray-200">
-                    <button id="login-tab" class="flex-1 py-3 text-lg font-medium text-center text-indigo-600 border-b-2 border-indigo-600 focus:outline-none hover:text-indigo-800">
-                        Login
-                    </button>
-                    <button id="signup-tab" class="flex-1 py-3 text-lg font-medium text-center text-gray-600 focus:outline-none hover:text-gray-800">
-                        Sign Up
-                    </button>
-                </div>
-
-                <!-- Login Form Section -->
-                <form id="login-form" class="space-y-6">
-                    <div>
-                        <label for="login-email" class="block text-sm font-medium text-gray-700 mb-2">Email or Username</label>
-                        <input type="text" id="login-email" name="email"
-                               class="w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-indigo-500 focus:border-indigo-500 transition duration-200"
-                               placeholder="your@example.com or username">
-                    </div>
-                    <div>
-                        <label for="login-password" class="block text-sm font-medium text-gray-700 mb-2">Password</label>
-                        <input type="password" id="login-password" name="password"
-                               class="w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-indigo-500 focus:border-indigo-500 transition duration-200"
-                               placeholder="••••••••">
-                    </div>
-                    <div>
-                        <label for="login-role" class="block text-sm font-medium text-gray-700 mb-2">Login As</label>
-                        <select id="login-role" name="role"
-                                class="block w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-indigo-500 focus:border-indigo-500 transition duration-200">
-                            <option value="student">Student</option>
-                            <option value="parent">Parent</option>
-                            <option value="staff">Staff</option>
-                            <option value="admin">Admin</option> <!-- Admin option is here -->
-                        </select>
-                    </div>
-                    <button type="submit"
-                            class="w-full gradient-bg text-white py-3 rounded-lg font-semibold text-lg hover:from-indigo-700 hover:to-purple-800 transition duration-300 transform hover:scale-105">
-                        Login
-                    </button>
-                    <div class="text-center text-sm">
-                        <a href="#" class="text-indigo-600 hover:text-indigo-800 font-medium">Forgot Password?</a>
-                    </div>
-                </form>
-
-                <!-- Sign Up Form Section (hidden by default) -->
-                <form id="signup-form" class="space-y-6 hidden">
-                    <div>
-                        <label for="signup-username" class="block text-sm font-medium text-gray-700 mb-2">Username</label>
-                        <input type="text" id="signup-username" name="username"
-                               class="w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-indigo-500 focus:border-indigo-500 transition duration-200"
-                               placeholder="Choose a username">
-                    </div>
-                    <div>
-                        <label for="signup-email" class="block text-sm font-medium text-gray-700 mb-2">Email Address</label>
-                        <input type="email" id="signup-email" name="email"
-                               class="w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-indigo-500 focus:border-indigo-500 transition duration-200"
-                               placeholder="your@example.com">
-                    </div>
-                    <div>
-                        <label for="signup-phone" class="block text-sm font-medium text-gray-700 mb-2">Phone Number</label>
-                        <input type="tel" id="signup-phone" name="phone"
-                               class="w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-indigo-500 focus:border-indigo-500 transition duration-200"
-                               placeholder="e.g., +265XXXXXXXXX">
-                    </div>
-                    <div>
-                        <label for="signup-password" class="block text-sm font-medium text-gray-700 mb-2">Password</label>
-                        <input type="password" id="signup-password" name="password"
-                               class="w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-indigo-500 focus:border-indigo-500 transition duration-200"
-                               placeholder="Minimum 8 characters">
-                    </div>
-                    <div>
-                        <label for="signup-confirm-password" class="block text-sm font-medium text-gray-700 mb-2">Confirm Password</label>
-                        <input type="password" id="signup-confirm-password" name="confirm_password"
-                               class="w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-indigo-500 focus:border-indigo-500 transition duration-200"
-                               placeholder="Confirm your password">
-                    </div>
-                    <div>
-                        <label for="signup-role" class="block text-sm font-medium text-gray-700 mb-2">Sign Up As</label>
-                        <select id="signup-role" name="role"
-                                class="block w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-indigo-500 focus:border-indigo-500 transition duration-200">
-                            <option value="student">Student</option>
-                            <option value="parent">Parent</option>
-                        </select>
-                    </div>
-                    <button type="submit"
-                            class="w-full gradient-bg text-white py-3 rounded-lg font-semibold text-lg hover:from-indigo-700 hover:to-purple-800 transition duration-300 transform hover:scale-105">
-                        Sign Up
-                    </button>
-                </form>
-
-                <!-- Message Box for alerts -->
-                <div id="message-box" class="hidden mt-4 p-3 rounded-lg text-sm text-center" role="alert"></div>
-
-            </div>
+<body class="bg-gray-100 flex items-center justify-center min-h-screen font-sans">
+    <div class="bg-white p-8 rounded-lg shadow-xl w-full max-w-md">
+        <div class="text-center mb-6">
+            <img src="https://via.placeholder.com/150" alt="EduMalawi Logo" class="mx-auto h-24 w-24 mb-4 rounded-full border-2 border-indigo-500">
+            <h2 class="text-3xl font-bold text-gray-800">Welcome to EduMalawi</h2>
+            <p class="text-gray-600">Your Unified Educational Platform</p>
         </div>
 
-
-        <div id="student-dashboard-section" class="hidden"></div>
-        <div id="teacher-dashboard-section" class="hidden"></div>
-        <div id="parent-dashboard-section" class="hidden"></div>
-        <div id="headmaster-dashboard-section" class="hidden"></div>
-        <div id="admin-dashboard-section" class="hidden"></div>
-
-        <section id="about" class="mb-12 py-12 bg-white rounded-lg shadow-md">
-            <h2 class="text-3xl font-bold text-gray-800 text-center mb-8">About EduMalawi</h2>
-            <div class="max-w-3xl mx-auto text-gray-600 text-lg">
-                <p class="mb-4">EduMalawi is a comprehensive educational platform designed to streamline communication, enhance learning, and simplify administration within schools across Malawi. Our mission is to empower students, support teachers, engage parents, and provide headmasters and administrators with the tools they need to foster a thriving educational environment.</p>
-                <p>From assignment tracking and grade management to school-wide announcements and financial reporting, EduMalawi brings all essential school functions into a single, easy-to-use system.</p>
-            </div>
-        </section>
-
-        <section id="features" class="mb-12 py-12 bg-gray-100 rounded-lg shadow-md">
-            <h2 class="text-3xl font-bold text-gray-800 text-center mb-8">Key Features</h2>
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-5xl mx-auto">
-                <div class="bg-white p-6 rounded-lg shadow-md text-center">
-                    <i class="fas fa-user-graduate text-4xl text-indigo-600 mb-4"></i>
-                    <h3 class="text-xl font-semibold text-gray-800 mb-2">Student Portal</h3>
-                    <p class="text-gray-600">Access assignments, grades, learning resources, and communicate with teachers.</p>
-                </div>
-                <div class="bg-white p-6 rounded-lg shadow-md text-center">
-                    <i class="fas fa-chalkboard-teacher text-4xl text-indigo-600 mb-4"></i>
-                    <h3 class="text-xl font-semibold text-gray-800 mb-2">Teacher Dashboard</h3>
-                    <p class="text-gray-600">Manage classes, post assignments, enter grades, and track student progress.</p>
-                </div>
-                <div class="bg-white p-6 rounded-lg shadow-md text-center">
-                    <i class="fas fa-users text-4xl text-indigo-600 mb-4"></i>
-                    <h3 class="text-xl font-semibold text-gray-800 mb-2">Parent Portal</h3>
-                    <p class="text-gray-600">Monitor child's academic performance, view announcements, and connect with school staff.</p>
-                </div>
-                <div class="bg-white p-6 rounded-lg shadow-md text-center">
-                    <i class="fas fa-user-tie text-4xl text-indigo-600 mb-4"></i>
-                    <h3 class="text-xl font-semibold text-gray-800 mb-2">Headmaster Overview</h3>
-                    <p class="text-gray-600">Gain insights into school performance, manage staff, and oversee curriculum.</p>
-                </div>
-                <div class="bg-white p-6 rounded-lg shadow-md text-center">
-                    <i class="fas fa-cogs text-4xl text-indigo-600 mb-4"></i>
-                    <h3 class="text-xl font-semibold text-gray-800 mb-2">Admin Controls</h3>
-                    <p class="text-gray-600">Full system management, user accounts, course configuration, and system health checks.</p>
-                </div>
-                <div class="bg-white p-6 rounded-lg shadow-md text-center">
-                    <i class="fas fa-comments text-4xl text-indigo-600 mb-4"></i>
-                    <h3 class="text-xl font-semibold text-gray-800 mb-2">Seamless Communication</h3>
-                    <p class="text-gray-600">Integrated messaging and announcement system for all stakeholders.</p>
-                </div>
-            </div>
-        </section>
-
-        <section id="contact" class="py-12 bg-white rounded-lg shadow-md">
-            <h2 class="text-3xl font-bold text-gray-800 text-center mb-8">Contact Us</h2>
-            <div class="max-w-2xl mx-auto px-4">
-                <p class="text-lg text-gray-600 text-center mb-6">Have questions or want to learn more about EduMalawi? Reach out to us!</p>
-                <form class="space-y-4">
-                    <div>
-                        <label for="name" class="block text-sm font-medium text-gray-700 mb-2">Name:</label>
-                        <input type="text" id="name" name="name" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" placeholder="Your Name">
-                    </div>
-                    <div>
-                        <label for="email" class="block text-sm font-medium text-gray-700 mb-2">Email:</label>
-                        <input type="email" id="email" name="email" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" placeholder="Your Email">
-                    </div>
-                    <div>
-                        <label for="message" class="block text-sm font-medium text-gray-700 mb-2">Message:</label>
-                        <textarea id="message" name="message" rows="5" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" placeholder="Your Message"></textarea>
-                    </div>
-                    <div class="text-center">
-                        <button type="submit" class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-6 rounded-full focus:outline-none focus:shadow-outline transition duration-300">Send Message</button>
-                    </div>
-                </form>
-            </div>
-        </section>
-    </main>
-
-    <footer class="gradient-bg text-white py-6 mt-12">
-        <div class="container mx-auto px-4 text-center">
-            <p>&copy; 2023 EduMalawi. All rights reserved.</p>
-            <div class="flex justify-center space-x-4 mt-2">
-                <a href="#" class="hover:text-gray-200"><i class="fab fa-facebook-f"></i></a>
-                <a href="#" class="hover:text-gray-200"><i class="fab fa-twitter"></i></a>
-                <a href="#" class="hover:text-gray-200"><i class="fab fa-linkedin-in"></i></a>
-            </div>
+        <div class="flex border-b border-gray-200 mb-6" id="tab-navigation">
+            <button id="login-tab" class="flex-1 py-3 text-center text-lg font-medium text-indigo-600 border-b-2 border-indigo-600 focus:outline-none hover:bg-gray-50 transition duration-150">Login</button>
+            <button id="signup-tab" class="flex-1 py-3 text-center text-lg font-medium text-gray-600 border-b-2 border-transparent focus:outline-none hover:bg-gray-50 transition duration-150">Sign Up</button>
         </div>
-    </footer>
 
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            // Mobile menu toggle
-            document.getElementById('mobile-menu-button').addEventListener('click', function() {
-                const menu = document.getElementById('mobile-menu');
-                menu.classList.toggle('hidden');
-            });
+        <form id="login-form" class="space-y-4">
+            <div>
+                <label for="login-username" class="block text-gray-700 text-sm font-bold mb-2">Username or Email:</label>
+                <input type="text" id="login-username" class="shadow appearance-none border rounded w-full py-3 px-4 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-indigo-500" placeholder="e.g., john.doe or john@example.com" required>
+            </div>
+            <div>
+                <label for="login-password" class="block text-gray-700 text-sm font-bold mb-2">Password:</label>
+                <input type="password" id="login-password" class="shadow appearance-none border rounded w-full py-3 px-4 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-indigo-500" placeholder="********" required>
+            </div>
+            <div>
+                <label for="login-role" class="block text-gray-700 text-sm font-bold mb-2">Login as:</label>
+                <select id="login-role" class="shadow border rounded w-full py-3 px-4 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-indigo-500" required>
+                    <option value="">Select Role</option>
+                    <option value="student">Student</option>
+                    <option value="teacher">Teacher</option>
+                    <option value="parent">Parent</option>
+                    <option value="headmaster">Headmaster</option>
+                    <option value="admin">Admin</option>
+                </select>
+            </div>
+            <button type="submit" class="gradient-bg text-white font-bold py-3 px-4 rounded-md w-full hover:opacity-90 focus:outline-none focus:shadow-outline transition duration-200">Login</button>
+        </form>
 
-            // Base URL for your backend server
-            // If you deploy your backend, replace 'http://localhost:3000' with your server's actual URL
-            const BACKEND_URL = 'http://localhost:3000'; // IMPORTANT: Change this to your deployed backend URL when live!
+        <form id="signup-form" class="space-y-4 hidden">
+            <div>
+                <label for="signup-username" class="block text-gray-700 text-sm font-bold mb-2">Desired Username:</label>
+                <input type="text" id="signup-username" class="shadow appearance-none border rounded w-full py-3 px-4 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-indigo-500" placeholder="e.g., jane.malawi" required>
+            </div>
+            <div>
+                <label for="signup-email" class="block text-gray-700 text-sm font-bold mb-2">Email:</label>
+                <input type="email" id="signup-email" class="shadow appearance-none border rounded w-full py-3 px-4 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-indigo-500" placeholder="e.g., jane@example.com" required>
+            </div>
+            <div>
+                <label for="signup-password" class="block text-gray-700 text-sm font-bold mb-2">Password:</label>
+                <input type="password" id="signup-password" class="shadow appearance-none border rounded w-full py-3 px-4 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-indigo-500" placeholder="********" required>
+            </div>
+            <div>
+                <label for="signup-role" class="block text-gray-700 text-sm font-bold mb-2">Register as:</label>
+                <select id="signup-role" class="shadow border rounded w-full py-3 px-4 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-indigo-500" required>
+                    <option value="">Select Role</option>
+                    <option value="student">Student</option>
+                    <option value="parent">Parent</option>
+                </select>
+            </div>
+            <button type="submit" class="gradient-bg text-white font-bold py-3 px-4 rounded-md w-full hover:opacity-90 focus:outline-none focus:shadow-outline transition duration-200">Sign Up</button>
+        </form>
 
-            // Login modal functionality (new merged code)
-            const authModal = document.getElementById('auth-modal');
-            const closeModalBtn = document.getElementById('close-modal-btn');
-            const loginTab = document.getElementById('login-tab');
-            const signupTab = document.getElementById('signup-tab');
-            const loginForm = document.getElementById('login-form');
-            const signupForm = document.getElementById('signup-form');
-            const authTitle = document.getElementById('auth-title');
-            const messageBox = document.getElementById('message-box');
-            const tabNavigation = document.getElementById('tab-navigation');
+        <div class="text-center mt-6">
+            <a href="#" class="text-indigo-600 hover:underline text-sm">Forgot Password?</a>
+        </div>
+    </div>
 
-            const loginRoleSelect = document.getElementById('login-role');
-            const signupRoleSelect = document.getElementById('signup-role');
-            const signupPhoneInput = document.getElementById('signup-phone');
+    <div id="message-box" class="message-box hidden"></div>
 
-            // Event listeners for the main page's login buttons to show the new modal
-            const loginButton = document.getElementById('login-button');
-            const mobileLoginButton = document.getElementById('mobile-login-button');
+    <div id="logout-modal-placeholder"></div>
 
-            function showAuthModal() {
-                authModal.classList.remove('hidden');
-                // Ensure login form is shown by default when opening the modal
-                showLoginForm();
-            }
-
-            loginButton.addEventListener('click', showAuthModal);
-            mobileLoginButton.addEventListener('click', showAuthModal);
-
-
-            // Function to show messages in the custom message box
-            function showMessage(message, type = 'info') {
-                messageBox.textContent = message;
-                messageBox.classList.remove('hidden', 'bg-red-100', 'text-red-700', 'bg-green-100', 'text-green-700', 'bg-blue-100', 'text-blue-700');
-                if (type === 'error') {
-                    messageBox.classList.add('bg-red-100', 'text-red-700');
-                } else if (type === 'success') {
-                    messageBox.classList.add('bg-green-100', 'text-green-700');
-                } else { // info
-                    messageBox.classList.add('bg-blue-100', 'text-blue-700');
-                }
-                setTimeout(() => {
-                    messageBox.classList.add('hidden');
-                }, 5000); // Hide message after 5 seconds
-            }
-
-            // Function to switch between login and sign up forms
-            function showLoginForm() {
-                loginTab.classList.add('border-indigo-600', 'text-indigo-600');
-                loginTab.classList.remove('border-gray-200', 'text-gray-600');
-                signupTab.classList.remove('border-indigo-600', 'text-indigo-600');
-                signupTab.classList.add('border-gray-200', 'text-gray-600');
-
-                loginForm.classList.remove('hidden');
-                signupForm.classList.add('hidden');
-                authTitle.textContent = 'Login';
-                messageBox.classList.add('hidden'); // Clear messages on tab switch
-
-                // When switching to login form, ensure staff/admin logic is applied if staff or admin is already selected
-                if (loginRoleSelect.value === 'staff' || loginRoleSelect.value === 'admin') {
-                    signupTab.classList.add('hidden');
-                    tabNavigation.classList.add('justify-center');
-                    loginTab.classList.remove('flex-1');
-                    loginTab.classList.add('w-full');
-                } else {
-                    signupTab.classList.remove('hidden');
-                    tabNavigation.classList.remove('justify-center');
-                    loginTab.classList.add('flex-1');
-                    loginTab.classList.remove('w-full');
-                }
-            }
-
-            function showSignupForm() {
-                signupTab.classList.add('border-indigo-600', 'text-indigo-600');
-                signupTab.classList.remove('border-gray-200', 'text-gray-600');
-                loginTab.classList.remove('border-indigo-600', 'text-indigo-600');
-                loginTab.classList.add('border-gray-200', 'text-gray-600');
-
-                signupForm.classList.remove('hidden');
-                loginForm.classList.add('hidden');
-                authTitle.textContent = 'Sign Up';
-                messageBox.classList.add('hidden'); // Clear messages on tab switch
-            }
-
-            // Event listeners for tab switching
-            loginTab.addEventListener('click', showLoginForm);
-            signupTab.addEventListener('click', showSignupForm);
-
-            // Close modal functionality
-            closeModalBtn.addEventListener('click', function() {
-                authModal.classList.add('hidden');
-            });
-
-            // Close modal if clicked outside the content box
-            authModal.addEventListener('click', function(event) {
-                if (event.target === authModal) {
-                    authModal.classList.add('hidden');
-                }
-            });
-
-            // Handle Login Form Submission - NOW SENDS TO BACKEND
-            loginForm.addEventListener('submit', async function(e) {
-                e.preventDefault();
-                const email = document.getElementById('login-email').value;
-                const password = document.getElementById('login-password').value;
-                const role = loginRoleSelect.value;
-
-                if (!email || !password) {
-                    showMessage('Please fill in all fields.', 'error');
-                    return;
-                }
-
-                try {
-                    const response = await fetch(`${BACKEND_URL}/api/login`, {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                        },
-                        body: JSON.stringify({ email, password, role })
-                    });
-
-                    const data = await response.json();
-                    if (response.ok) {
-                        showMessage(data.message, 'success');
-                        authModal.classList.add('hidden'); // Hide the modal after success
-
-                        // Redirect based on role
-                        if (role === 'admin') {
-                            window.location.href = '/admin-dashboard.html'; // Redirect to admin dashboard
-                        }
-                        // Add more role-based redirects here if needed for other dashboards
-                        // else if (role === 'student') {
-                        //     window.location.href = '/student-dashboard.html';
-                        // }
-                        // else {
-                        //     // Default action for other roles, e.g., simply close modal or show welcome.
-                        // }
-                    } else {
-                        showMessage(data.message || 'Login failed. Please try again.', 'error');
-                    }
-                } catch (error) {
-                    console.error('Error during login:', error);
-                    showMessage('An error occurred during login. Please try again later.', 'error');
-                }
-            });
-
-            // Handle Sign Up Form Submission - NOW SENDS TO BACKEND
-            signupForm.addEventListener('submit', async function(e) {
-                e.preventDefault();
-                const username = document.getElementById('signup-username').value;
-                const email = document.getElementById('signup-email').value;
-                const phoneNumber = signupPhoneInput.value;
-                const password = document.getElementById('signup-password').value;
-                const confirmPassword = document.getElementById('signup-confirm-password').value; // Corrected to .value
-                const role = signupRoleSelect.value;
-
-                if (!username || !email || !phoneNumber || !password || !confirmPassword) {
-                    showMessage('Please fill in all fields.', 'error');
-                    return;
-                }
-
-                if (password.length < 8) {
-                    showMessage('Password must be at least 8 characters long.', 'error');
-                    return;
-                }
-
-                if (password !== confirmPassword) {
-                    showMessage('Passwords do not match.', 'error');
-                    return;
-                }
-
-                try {
-                    const response = await fetch(`${BACKEND_URL}/api/signup`, {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                        },
-                        body: JSON.stringify({ username, email, phoneNumber, password, role })
-                    });
-
-                    const data = await response.json();
-                    if (response.ok) {
-                        showMessage(data.message, 'success');
-                        // Switch to login tab after successful signup
-                        setTimeout(() => showLoginForm(), 2000);
-                    } else {
-                        showMessage(data.message || 'Sign up failed. Please try again.', 'error');
-                    }
-                } catch (error) {
-                    console.error('Error during sign up:', error);
-                    showMessage('An error occurred during sign up. Please try again later.', 'error');
-                }
-            });
-
-            // Logic: When 'Staff' or 'Admin' is selected, hide the 'Sign Up' tab and form
-            loginRoleSelect.addEventListener('change', function() {
-                if (loginRoleSelect.value === 'staff' || loginRoleSelect.value === 'admin') {
-                    signupTab.classList.add('hidden'); // Hide the sign up tab
-                    signupForm.classList.add('hidden'); // Ensure sign up form is hidden
-                    showLoginForm(); // Always switch to login form
-                    tabNavigation.classList.add('justify-center'); // Center the remaining tab
-                    loginTab.classList.remove('flex-1'); // Remove flex-1 from login tab when alone
-                    loginTab.classList.add('w-full'); // Make login tab full width when alone
-                } else {
-                    signupTab.classList.remove('hidden'); // Show the sign up tab for other roles
-                    tabNavigation.classList.remove('justify-center'); // Reset centering
-                    loginTab.classList.add('flex-1'); // Reset flex-1 for login tab
-                    loginTab.classList.remove('w-full'); // Reset width for login tab
-                }
-            });
-        });
-    </script>
+    <script src="js/main.js"></script>
+    <script src="js/auth.js"></script>
 </body>
 </html>
